@@ -1,0 +1,257 @@
+[
+  {
+    "nombre": "Maria",
+    "grupo": "B2",
+    "nota": 5.6
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "C3",
+    "nota": 48.4
+  },
+  {
+    "nombre": "Juan",
+    "grupo": "B2",
+    "nota": 35.4
+  },
+  {
+    "nombre": "Simon",
+    "grupo": "A3",
+    "nota": 58.7
+  },
+  {
+    "nombre": "Juan",
+    "grupo": "A1",
+    "nota": 73.1
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "C2",
+    "nota": 23.2
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "C2",
+    "nota": 82.9
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "C2",
+    "nota": 94.3
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "B2",
+    "nota": 46.2
+  },
+  {
+    "nombre": "Ana",
+    "grupo": "A3",
+    "nota": 76.0
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "B3",
+    "nota": 96.5
+  },
+  {
+    "nombre": "Ana",
+    "grupo": "C3",
+    "nota": 27.8
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "c1",
+    "nota": 80.0
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "B3",
+    "nota": 99.6
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "c1",
+    "nota": 95.9
+  },
+  {
+    "nombre": "Ana",
+    "grupo": "A3",
+    "nota": 50.5
+  },
+  {
+    "nombre": "Simon",
+    "grupo": "C2",
+    "nota": 84.0
+  },
+  {
+    "nombre": "Ana",
+    "grupo": "A3",
+    "nota": 65.0
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "B1",
+    "nota": 75.4
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "C3",
+    "nota": 15.0
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "c1",
+    "nota": 65.8
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "B3",
+    "nota": 29.7
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "c1",
+    "nota": 0.4
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "A2",
+    "nota": 37.2
+  },
+  {
+    "nombre": "Ana",
+    "grupo": "A3",
+    "nota": 64.7
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "B1",
+    "nota": 91.4
+  },
+  {
+    "nombre": "Ana",
+    "grupo": "A2",
+    "nota": 6.2
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "A1",
+    "nota": 88.9
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "c1",
+    "nota": 79.9
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "B3",
+    "nota": 80.6
+  },
+  {
+    "nombre": "Simon",
+    "grupo": "C2",
+    "nota": 19.7
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "C3",
+    "nota": 37.0
+  },
+  {
+    "nombre": "Ana",
+    "grupo": "A1",
+    "nota": 42.4
+  },
+  {
+    "nombre": "Juan",
+    "grupo": "B1",
+    "nota": 4.1
+  },
+  {
+    "nombre": "Simon",
+    "grupo": "A3",
+    "nota": 54.1
+  },
+  {
+    "nombre": "Juan",
+    "grupo": "C3",
+    "nota": 24.7
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "B3",
+    "nota": 29.4
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "B1",
+    "nota": 83.6
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "C3",
+    "nota": 5.7
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "A2",
+    "nota": 72.6
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "B3",
+    "nota": 64.6
+  },
+  {
+    "nombre": "Juan",
+    "grupo": "C2",
+    "nota": 50.0
+  },
+  {
+    "nombre": "Simon",
+    "grupo": "B1",
+    "nota": 33.3
+  },
+  {
+    "nombre": "Simon",
+    "grupo": "B1",
+    "nota": 73.7
+  },
+  {
+    "nombre": "Maria",
+    "grupo": "B3",
+    "nota": 67.4
+  },
+  {
+    "nombre": "Juan",
+    "grupo": "A3",
+    "nota": 33.1
+  },
+  {
+    "nombre": "Juan",
+    "grupo": "B1",
+    "nota": 19.9
+  },
+  {
+    "nombre": "Juan",
+    "grupo": "c1",
+    "nota": 60.9
+  },
+  {
+    "nombre": "Esteban",
+    "grupo": "A3",
+    "nota": 79.3
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "B2",
+    "nota": 47.2
+  },
+  {
+    "nombre": "Pedro",
+    "grupo": "C2",
+    "nota": 86
+  }
+]

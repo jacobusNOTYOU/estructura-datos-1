@@ -11,6 +11,9 @@ unidad1/
 |  ├──desafio4.py       <-- Desafio 4
 |  ├──desafio5.py       <-- Desafio 5
 |  ├──desafio6.py       <-- Desafio 6
+|  ├──enunciados.py       <-- enunciados del github
+|  ├──estudiantes.json       <-- producto de enunciados.py
+|  ├──estudiantes.pkl       <-- producto de enunciados.py
 |  └──lista_ordenada.py <-- Implementacion de Estructuras de datos
 └──README.md
 ```

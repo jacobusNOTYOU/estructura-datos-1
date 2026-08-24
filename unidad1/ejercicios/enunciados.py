@@ -9,6 +9,8 @@ from typing import Any
 import random
 import timeit
 import tracemalloc
+import json
+import pickle
 
 
 # ENUNCIADO #1
@@ -390,6 +392,8 @@ class ArrayDinamico:
         return self._tamano
 
 
+# ENUNCIADO #3
+
 def generar_alumno() -> dict['campo': Any]:
     """Genera un regestro para un alumno.
 
@@ -500,3 +504,266 @@ print('Uso de aproximado de memoria:')
 print('----------------------------')
 print(f'ArrayEstatico: {array1_size} Bs')
 print(f'ArrayDinamico: {array2_size} Bs')
+
+
+# ENUNCIADO #4
+# JSON 
+def guardar_json(lista: list[Any], archivo: str) -> None:
+    """Guarda una lista en formato JSON.
+    
+    Parametros:
+    - lista: la lista a guardar.
+    - archivo: nombre del archivo en el que guardar la lista.
+    """
+
+    with open(archivo, 'w', encoding='UTF-8') as f:
+        json.dump(lista, f, indent=2)
+
+
+def recuperar_json(archivo: str) -> list[Any]:
+    """Lee un archivo JSON y retorna el resultado.
+    
+    Parametros: 
+    - archivo: el nombre del archivo del '.json'.
+    """
+
+    with open(archivo, 'r', encoding='UTF-8') as f:
+        return json.load(f)
+
+
+# Pickle
+def guardar_pickle(lista: list[Any], archivo: str) -> None:
+    """Guarda una lista en un archivo de tipo Pickle.
+    
+    Parametros:
+    - lista: lista a guardar.
+    - archivo: nombre del archivo en el cual guardar.
+    """
+
+    with open(archivo, 'wb') as f:
+        pickle.dump(lista, f)
+
+
+def recuperar_pickle(archivo: str) -> list[Any]:
+    """Lee un archivo Pickle y devuelve los objetos guardados.
+    
+    Parametros:
+    - archivo: el nombre del archivo a recuperar.
+    """
+
+    with open(archivo, 'rb') as f:
+        return pickle.load(f)
+
+
+print()
+print('Persistencia de datos:')
+print('----------------------')
+ruta: str = 'unidad1/ejercicios/'
+print('JSON:')
+archivo: str = ruta + 'estudiantes.json'
+print(f'guardando {archivo} en formato JSON.')
+guardar_json(alumnos, archivo)
+print(f'Leyendo {archivo} ...')
+lista = recuperar_json(archivo)
+i: int = 0
+for alumno in lista:
+    i += 1
+    print(f'[{i}] {alumno}')
+
+print()
+print('Pickle:')
+archivo: str = ruta + 'estudiantes.pkl'
+print(f'guardando {archivo} en formato Pickle.')
+guardar_pickle(alumnos, archivo)
+print(f'Leyendo {archivo} ...')
+lista = recuperar_pickle(archivo)
+i: int = 0
+for alumno in lista:
+    i += 1
+    print(f'[{i}] {alumno}')
+
+print()
+print(
+"""Cuando usar cada formato:
+
+- JSON: Cuando se quiere guardar una estructura en un formato interoperable y/o
+        lejible para el ser humano. Su desventaja es el no tener soporte para
+        clases de python por defecto, lo que requiere se hacer un custom encoder.
+
+- Pickle: Cuando se quiere guardar cualquier tipo de dato de python en una forma
+          rapida y no interesa si es lejible para el ser humano. Su desventaja es
+          falta de interoperabilidad.
+"""
+)
+
+# DESAFIO
+class RepositorioEstudiantes(ABC):
+    """Guarda estudiantes.
+    
+    Funciones y Metodos:
+    - guardar
+    - cargar
+    - agregar
+    - listar
+    """
+
+    @abstractmethod
+    def guardar(self, archivo: str) -> None:
+        """Guarda la lista de estudiantes en un archivo.
+        
+        Parametros:
+        - archivo: nombre del archivo en el cual guardar los estudiantes.
+        """
+        pass
+
+    @abstractmethod
+    def cargar(self, archivo: str) -> None:
+        """Carga una lista de estudiantes de un archivo.
+        
+        Paramtros:
+        - archivo: nombre del archivo del cual cargar los estudiantes.
+        """
+        pass
+
+    @abstractmethod
+    def agregar(self, estudiante: dict[str:Any]) -> None:
+        """Agrega un estudiante a la lista.
+        
+        Parametros:
+        - estudiante: el estudiante a agregar.
+        """
+        pass
+
+    @abstractmethod
+    def listar(self) -> list[dict[str:Any]]:
+        """Devuelve una lista de los estudiantes."""
+        pass
+
+
+class RepositorioEstudiantesJSON(RepositorioEstudiantes):
+    """Guarda estudiantes usando el formato JSON.
+    
+    Funciones y Metodos:
+    - guardar
+    - cargar
+    - agregar
+    - listar
+    """
+    
+    def __init__(self) -> None:
+        self._estudiantes: list[dict[str:Any]] = None
+
+    def guardar(self, archivo: str) -> None:
+        """Guarda la lista de estudiantes en un archivo.
+        
+        Parametros:
+        - archivo: nombre del archivo en el cual guardar los estudiantes.
+        """
+        with open(archivo, 'w', encoding='UTF-8') as f:
+            json.dump(self._estudiantes, f, indent=2)
+
+    def cargar(self, archivo: str) -> None:
+        """Carga una lista de estudiantes de un archivo.
+        
+        Paramtros:
+        - archivo: nombre del archivo del cual cargar los estudiantes.
+        """
+        with open(archivo, 'r', encoding='UTF-8') as f:
+            self._estudiantes = json.load(f)
+
+    def agregar(self, estudiante: dict[str:Any]) -> None:
+        """Agrega un estudiante a la lista.
+        
+        Parametros:
+        - estudiante: el estudiante a agregar.
+        """
+        self._estudiantes.append(estudiante)
+
+    def listar(self) -> list[dict[str:Any]]:
+        """Devuelve una lista de los estudiantes."""
+        return self._estudiantes
+
+
+class RepositorioEstudiantesPickle(RepositorioEstudiantes):
+    """Guarda estudiantes usando el formato Pickle.
+    
+    Funciones y Metodos:
+    - guardar
+    - cargar
+    - agregar
+    - listar
+    """
+
+    def __init__(self) -> None:
+        self._estudiantes: list[dict[str:Any]] = None
+
+    def guardar(self, archivo: str) -> None:
+        """Guarda la lista de estudiantes en un archivo.
+        
+        Parametros:
+        - archivo: nombre del archivo en el cual guardar los estudiantes.
+        """
+        with open(archivo, 'wb') as f:
+            pickle.dump(self._estudiantes, f)
+
+    def cargar(self, archivo: str) -> None:
+        """Carga una lista de estudiantes de un archivo.
+        
+        Paramtros:
+        - archivo: nombre del archivo del cual cargar los estudiantes.
+        """
+        with open(archivo, 'rb') as f:
+            self._estudiantes = pickle.load(f)
+
+    def agregar(self, estudiante: dict[str:Any]) -> None:
+        """Agrega un estudiante a la lista.
+        
+        Parametros:
+        - estudiante: el estudiante a agregar.
+        """
+        self._estudiantes.append(estudiante)
+
+    def listar(self) -> list[dict[str:Any]]:
+        """Devuelve una lista de los estudiantes."""
+        return self._estudiantes
+
+
+def agregar_estudiante_en_repositorio(
+            repo: RepositorioEstudiantes, 
+            archivo: str,
+            estudiante: dict[str:Any]
+) -> None:
+    """"""
+    repo.cargar(archivo)
+    repo.agregar(estudiante)
+    repo.guardar(archivo)
+
+repo_json = RepositorioEstudiantesJSON()
+repo_pickle = RepositorioEstudiantesPickle()
+estudiante = {"nombre":'Pedro', "grupo":'C2', "nota":86}
+print()
+print('DESAFIO:')
+print('--------')
+archivo_json = ruta + 'estudiantes.json'
+print(f'guardar el estudiante: {estudiante}')
+print('Usando JSON:')
+print('Se le agrega un estudiante: {estudiante}')
+agregar_estudiante_en_repositorio(repo_json, archivo_json, estudiante)
+lista = recuperar_json(archivo_json)
+i: int = 0
+for estudiante in lista:
+    i += 1
+    print(f'[{i}] {estudiante}')
+
+print()
+print('Usando Pickle:')
+archivo_pickle = ruta + 'estudiantes.pkl'
+print('Se le agrega un estudiante: {estudiante}')
+agregar_estudiante_en_repositorio(repo_pickle, archivo_pickle, estudiante)
+lista = recuperar_pickle(archivo_pickle)
+i: int = 0
+for estudiante in lista:
+    i += 1
+    print(f'[{i}] {estudiante}')
+print()
+print('Ambas implementaciones funcionan!')

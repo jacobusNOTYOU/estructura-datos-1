@@ -25,4 +25,5 @@ python --version
 ```
 
 #   Bibliografia
+
 [^1]: [INF-220-EstructurasDatos1](https://github.com/profjcp/INF220-EstructurasDatos1) por el Ing. J. C. Peinado.
