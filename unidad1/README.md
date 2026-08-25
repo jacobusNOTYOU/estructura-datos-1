@@ -1,6 +1,7 @@
 # Unidad 1: Modelos de Representación de Datos
 
 En esta unidad se explorara estructuras de datos simples.
+
 # Indice
 ```
 unidad1/
