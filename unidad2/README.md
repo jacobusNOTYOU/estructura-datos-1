@@ -4,5 +4,9 @@
 ```
 unidad1/
 ├──conjunto.py           <-- Implementacion de Cojunto
+├──polinomio.py           <-- Implementacion de ADTPolinomio
 └──README.md
 ```
+
+# Tarea
+- El docente va a mandar aplicaciones
