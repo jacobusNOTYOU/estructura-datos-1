@@ -23,6 +23,7 @@ MVCpilinomio/
 ## Crear
 
 En el directorio del proyecto:
+
 ``bash
 python -m venv .venv
 ``
@@ -30,6 +31,7 @@ python -m venv .venv
 ## Activar
 
 En el directorio del proyecto:
+
 ``bash
 source .venv/bin/activate
 ``
