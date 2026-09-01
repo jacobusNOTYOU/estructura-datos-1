@@ -7,6 +7,3 @@ unidad1/
 ├──polinomio.py           <-- Implementacion de ADTPolinomio
 └──README.md
 ```
-
-# Tarea
-- El docente va a mandar aplicaciones
