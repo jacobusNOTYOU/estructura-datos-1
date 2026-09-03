@@ -5,9 +5,10 @@ from src.controloers.controler import Controler
 
 def main():
     root = Tk()
+    root.title('Polinomio')
 
     model = Polinomio()
-    view = View(root)
+    view = View(root, 14, 15)
     controler = Controler(view, model)
 
     root.mainloop()

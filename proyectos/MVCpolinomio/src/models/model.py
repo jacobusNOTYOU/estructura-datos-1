@@ -6,6 +6,26 @@ Clases Publicas:
 
 from copy import copy
 
+def cvn(expresion: str) -> int|float:
+    """Convierte la expresion en float si es necesario, si no, lo 
+    convierte en int.
+    
+    Parametros:
+    - expresion: una cadena con el valor a convertir.
+
+    Excepciones:
+    - ValueError: si es que no se pudo convertir 'expresion' en int
+    ni en float.
+    """
+
+    conversion: int|float
+    try:
+        conversion = int(expresion)
+    except ValueError:
+        conversion = float(expresion)
+    return conversion
+
+
 class NodoPolinomio:
     def __init__(self, coeficiente: int|float, exponente: int):
         self.coeficiente: int|float = coeficiente
@@ -19,6 +39,7 @@ class Polinomio:
     - agregar_termino
     - crear_polinomio
     - borrar
+    - eval
     """
     def __init__(self) -> None:
         self.cabeza: NodoPolinomio|None = None
@@ -27,24 +48,29 @@ class Polinomio:
         """Agrega un termino al polinomio.
         
         Parametros:
-        - coeficiente: Coeficiente del termino.
-        - exponenete: Exponente del termino.
+        - coeficiente: coeficiente del nuevo termino.
+        - grado: del nuevo termino.
         """
-        nuevo_nodo: NodoPolinomio = NodoPolinomio(coeficiente, exponente)
+
+        nuevo = NodoPolinomio(coeficiente, exponente)
         if self.cabeza is None:
-            self.cabeza = nuevo_nodo
+            self.cabeza = nuevo
         else:
-            actual: NodoPolinomio = self.cabeza
-            anterior: NodoPolinomio = None
-            while actual is not None and actual.exponente > exponente:
+            actual: 'NodoPolinomio' = self.cabeza
+            anterior: 'NodoPolinomio' = None
+            while actual is not None and actual.exponente > nuevo.exponente:
                 anterior = actual
                 actual = actual.siguiente
-            if anterior is None:
-                nuevo_nodo.siguiente = self.cabeza
-                self.cabeza = nuevo_nodo
+            if actual is None:
+                anterior.siguiente = nuevo
+            elif actual.exponente == nuevo.exponente:
+                actual.coeficiente += nuevo.coeficiente
             else:
-                anterior.siguiente = nuevo_nodo
-                nuevo_nodo.siguiente = actual
+                nuevo.siguiente = actual
+                if anterior is None:
+                    self.cabeza = nuevo
+                else: 
+                    anterior.siguiente = nuevo
 
     def crear_polinomio(self, polinomio: str) -> None:
         """Crea un polinomio en base a un str, y lo agregar al existente
@@ -72,6 +98,24 @@ class Polinomio:
     def borrar(self) -> None:
         """Elimina el polinomio dejandolo en None."""
         self.cabeza = None
+
+    def eval(self, x: int|float) -> float|int:
+        """Evalua el polinomio con el valor de 'x'
+        
+        Parametros:
+        - x: El valor de la variable 'x'.
+        """
+
+        if self.cabeza is None:
+            return 0
+
+        actual: NodoPolinomio = self.cabeza
+        resultado: int|float = 0
+        while actual is not None:
+            resultado += actual.coeficiente * (x**actual.exponente)
+            actual = actual.siguiente
+        return resultado
+
 
     def _parse_terminos(self, polinomio: str) -> list[NodoPolinomio]:
         """Parsea los terminos de 'polinomio'.
@@ -136,7 +180,7 @@ class Polinomio:
             pos_coef: int = termino.find('x')
             pos_exp: int = termino.find('^')
             if pos_coef == -1 and pos_exp == -1:
-                return NodoPolinomio(int(termino), 0)
+                return NodoPolinomio(cvn(termino), 0)
             elif pos_coef != -1 and pos_exp != -1: 
                 if pos_coef == 0:
                     return NodoPolinomio(1, int(termino[pos_exp + 1:]))
@@ -147,11 +191,11 @@ class Polinomio:
                     elif coeficiente == '-':
                         return NodoPolinomio(-1, int(termino[pos_exp + 1:]))
                     elif termino[:1].isdecimal():
-                        return NodoPolinomio(int(termino[:pos_coef]), int(termino[pos_exp + 1:]))
+                        return NodoPolinomio(cvn(termino[:pos_coef]), int(termino[pos_exp + 1:]))
                     else:
                         raise ValueError('coeficiente invalido!')
                 else:
-                    return NodoPolinomio(int(termino[:pos_coef]), int(termino[pos_exp + 1:]))
+                    return NodoPolinomio(cvn(termino[:pos_coef]), int(termino[pos_exp + 1:]))
             elif pos_coef != -1 and pos_exp == -1: 
                 if pos_coef == 0:
                     return NodoPolinomio(1, 1)
@@ -162,11 +206,11 @@ class Polinomio:
                     elif coeficiente == '-':
                         return NodoPolinomio(-1, 1)
                     elif termino[:1].isdecimal():
-                        return NodoPolinomio(int(termino[:pos_coef]), 1)
+                        return NodoPolinomio(cvn(termino[:pos_coef]), 1)
                     else:
                         raise ValueError('coeficiente invalido!')
                 else:
-                    return NodoPolinomio(int(termino[:pos_coef]), 1)
+                    return NodoPolinomio(cvn(termino[:pos_coef]), 1)
             else:
                 raise ValueError('"termino" es invalido!')
 
