@@ -3,7 +3,12 @@
 # Indice
 ```
 unidad1/
-├──conjunto.py           <-- Implementacion de Cojunto
-├──polinomio.py           <-- Implementacion de ADTPolinomio
+├──implementaciones/            <-- Implementaciones de las estructuras
+|  ├──conjunto.py               <-- Implementacion de Cojunto
+|  ├──polinomio.py              <-- Implementacion de ADTPolinomio
+|  └──matriz_dispersa.py        <-- Implementacion de Matriz Dispersa
+├──ejercicios/                  <-- Ejercicios de la unidad
+|  ├──enunciado1.py             <-- Ejercicio ADT Polinomio
+|  └──enunciado2.py             <-- Ejercicio ADT Conjunto
 └──README.md
 ```
