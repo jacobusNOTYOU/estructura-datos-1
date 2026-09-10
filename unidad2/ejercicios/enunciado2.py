@@ -57,7 +57,14 @@ class ConjuntoADT:
         - conjunto: conjunto a unir con 'self'.
         """
 
-        return self._elementos + conjunto.diferecia(self)._elementos
+        resultado: 'ConjuntoADT' = ConjuntoADT()
+        for e in self._elementos:
+            resultado.agregar(e)
+
+        for e in conjunto._elementos:
+            resultado.agregar(e)
+
+        return resultado
 
     def interseccion(self, conjunto: 'ConjuntoADT') -> 'ConjuntoADT':
         """Retorna la interseccion entre 'self' y 'conjunto'.
@@ -123,6 +130,8 @@ print('Unidad2: enunciado 2')
 print('--------------------')
 print()
 
+print('Pruba con numeros:')
+print()
 print('Sea conjunto A:')
 A = ConjuntoADT()
 A.agregar(0)
@@ -167,5 +176,50 @@ print('A diferencia simetrica B:')
 print(A.diferencia_simetrica(B))
 print()
 
-# Problemita: uncion retorna una tupla!
-print("Problemita: uncion retorna una tupla!")
+print('----------------------------')
+print()
+print('Prueba con cadenas:')
+print()
+print('Sea conjunto A:')
+A = ConjuntoADT()
+A.agregar('Juan')
+A.agregar('Pedro')
+A.agregar('Simon')
+A.agregar('Lucas')
+A.agregar('Maria')
+A.agregar('Marta')
+A.agregar('Natanael')
+print(A)
+print()
+
+print('Sea el conjunto B')
+B = ConjuntoADT()
+B.agregar('Natanael')
+B.agregar('Luis')
+B.agregar('Luciana')
+B.agregar('Marcos')
+B.agregar('Roxana')
+B.agregar('Pamela')
+B.agregar('John')
+print(B)
+print()
+
+print('A union B:')
+print(A.union(B))
+print()
+
+print('A interseccion B:')
+print(A.interseccion(B))
+print()
+
+print('A diferencia relativa B:')
+print(A.diferecia(B))
+print()
+
+print('B diferencia relativa A:')
+print(B.diferecia(A))
+print()
+
+print('A diferencia simetrica B:')
+print(A.diferencia_simetrica(B))
+print()

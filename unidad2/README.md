@@ -9,6 +9,7 @@ unidad1/
 |  └──matriz_dispersa.py        <-- Implementacion de Matriz Dispersa
 ├──ejercicios/                  <-- Ejercicios de la unidad
 |  ├──enunciado1.py             <-- Ejercicio ADT Polinomio
-|  └──enunciado2.py             <-- Ejercicio ADT Conjunto
+|  ├──enunciado2.py             <-- Ejercicio ADT Conjunto
+|  └──enunciado3.py             <-- Ejercicio Matriz Dispersa
 └──README.md
 ```
