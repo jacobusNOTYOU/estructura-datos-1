@@ -1,4 +1,26 @@
-"""Implementacion de Lista Simple."""
+"""1) Lista enlazada simple
+Implementa `ListaSimple con:
+- insertar al inicio y al final,
+- buscar,
+- eliminar por valor,
+- recorrido/impresion.
+Incluye control de lista vacia.
+"""
+
+
+class EmptyError(Exception):
+    """Error para objetos vacios."""
+    def __init__(self, args = None):
+        self.args = args
+        super().__init__(self.args)
+
+    def __str__(self) -> str:
+        excep = ''
+        for i in self.args:
+            for j in i:
+                excep += str(j)
+        return excep
+
 
 class _Nodo:
     """Nodo de ListaSimple."""
@@ -92,6 +114,8 @@ class ListaSimple:
         if self.cabeza is not None:
             self.cabeza = self.cabeza.siguiente
             self.tamanio -= 1
+        else:
+            raise EmptyError('La ListaSimple esta vacia!')
     
     def eliminar(self, dato) -> None:
         """Elimina dato de la Lista si existe.
@@ -109,6 +133,11 @@ class ListaSimple:
             if actual is not None:
                 anterior.siguiente = actual.siguiente
                 self.tamanio -= 1
+            else:
+                raise EmptyError(f'El elemento "{dato}" no esta en la '
+                                  'ListaSimple!'
+                )
+
 
     def buscar(self, dato: any) -> bool:
         """Busca el dato en la Lista y retorna True si lo encuentra, sino False
@@ -186,6 +215,10 @@ class ListaSimple:
             if el_nodo is not None:
                 anterior.siguiente = el_nodo.siguiente
                 self.tamanio -= 1
+            else:
+                raise EmptyError(f'El elemento "{dato}" no esta en la '
+                                  'ListaSimple!'
+                )
 
     def buscar_rec(self, dato: any) -> bool:
         """Busca el dato en la Lista y retorna True si lo encuentra, sino False
@@ -259,7 +292,6 @@ class ListaSimple:
 
     def __len__(self) -> int:
         return self.tamanio
-
 
 if __name__ == '__main__':
     print("DEMO")
