@@ -1,8 +1,9 @@
 # Unidad 2: ADT Conjunto Polimonio
 
 # Indice
+
 ```
-unidad1/
+unidad2/
 ├──implementaciones/            <-- Implementaciones de las estructuras
 |  ├──conjunto.py               <-- Implementacion de Cojunto
 |  ├──polinomio.py              <-- Implementacion de ADTPolinomio
@@ -10,6 +11,7 @@ unidad1/
 ├──ejercicios/                  <-- Ejercicios de la unidad
 |  ├──enunciado1.py             <-- Ejercicio ADT Polinomio
 |  ├──enunciado2.py             <-- Ejercicio ADT Conjunto
-|  └──enunciado3.py             <-- Ejercicio Matriz Dispersa
+|  ├──enunciado3.py             <-- Ejercicio Matriz Dispersa
+|  └──enunciado3.py             <-- Ejercicio de Integracion
 └──README.md
 ```
