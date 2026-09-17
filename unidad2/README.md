@@ -12,6 +12,6 @@ unidad2/
 |  ├──enunciado1.py             <-- Ejercicio ADT Polinomio
 |  ├──enunciado2.py             <-- Ejercicio ADT Conjunto
 |  ├──enunciado3.py             <-- Ejercicio Matriz Dispersa
-|  └──enunciado4.py             <-- Ejercicio de Integracion
+|  └──enunciado4/               <-- Ejercicio de Integracion
 └──README.md
 ```
