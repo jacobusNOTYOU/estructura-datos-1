@@ -1,0 +1,31 @@
+{
+    "library": [
+        {
+            "title": "Minecraft",
+            "artist": "C418",
+            "duration": 360
+        },
+        {
+            "title": "Sweden",
+            "artist": "C418",
+            "duration": 320
+        },
+        {
+            "title": "stal",
+            "artist": "C418",
+            "duration": 200
+        }
+    ],
+    "Cool": [
+        {
+            "title": "htop",
+            "artist": "unkown",
+            "duration": 200
+        },
+        {
+            "title": "Burger in the back",
+            "artist": "unkown",
+            "duration": 200
+        }
+    ]
+}
