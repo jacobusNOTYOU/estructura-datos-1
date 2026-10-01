@@ -13,7 +13,8 @@ librerira-musicas/
 ├── templates/      <-- Los templates html del projecto
 ├── test/           <-- Pruebas
 ├── app.py          <-- Inico de la WSGI
-└── README.md      
+├── README.md
+└── test.py         <-- Script para correr las pruebas
 ```
 
 # Instrucciones de Uso
@@ -31,4 +32,9 @@ pip install flask
 ```
 source .venv/bin/activate #para linux
 flask run
+```
+
+## Correr Pruebas
+```
+python test.py
 ```

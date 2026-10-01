@@ -1,7 +1,7 @@
 from models.structures import *
 
 # Music test
-def music_test():
+def music_test() -> int:
     failed_test_number = 0
     test_number = 0
 
@@ -33,10 +33,11 @@ def music_test():
     
     print("Passed: Music test!")
     print(f"Passed: {test_number - failed_test_number}/{test_number}.")
+    return failed_test_number, test_number
 
 
 # Playlist test
-def playlist_test():
+def playlist_test() -> int:
     print("Test: Playlist test.")
     failed_test_number = 0
     test_number = 0
@@ -99,6 +100,34 @@ def playlist_test():
     
     test_number += 1
 
+    # get_authors
+    print("Test: testing the `get_authors()` method.")
+    try:
+        authors = []
+        for i in range(len(playlists)):
+            authors.append(playlists[i].get_authors())
+
+        for i in range(len(playlists)):
+            for j in range(len(test_authors)):
+                if authors[i][j] != test_authors[j]:
+                    print(
+                        f"Failed: author: {authors[i][j]} is diferent than"
+                        f" expected {test_authors[j]}!"
+                    )
+                    little_failed = True
+
+    except _:
+        print(
+            f"Failed: `get_authors()` method raised an Exception."
+        )
+        failed_test_number += 1
+
+    if little_failed:
+        little_failed = False
+        failed_test_number += 1
+    
+    test_number += 1
+
     # get
     print("Test: testing the `get()` method.")
     try:
@@ -144,9 +173,10 @@ def playlist_test():
         failed_test_number += 1
 
     print(f"Passed: {test_number - failed_test_number}/{test_number}.")
+    return failed_test_number, test_number
 
 
-def library_test():
+def library_test() -> int:
     failed_test_number = 0
     test_number = 0
     little_failed = False
@@ -217,10 +247,44 @@ def library_test():
     
     test_number += 1
 
-    # add_music_to_library
-    print("Test: testing the `add_music_to_library()` method.")
+    # add_music
+    print("Test: testing the `add_music()` method.")
+    titles = ["stal", "Wo ich auch stehe", ""]
+    authors = ["C418", "Abraham"]
     try:
-        pass
+        lengths_1 = []
+        for i in range(len(libraries)):
+            lengths_1.append(len(libraries[i]))
+
+        for i in range(len(libraries)):
+            for j in range(len(names)):
+                if j < len(authors):
+                    if libraries[i].add_music(
+                                    names[i][j], 
+                                    titles[j], 
+                                    authors[j]
+                                    ):
+                        print(f"Test: succesfully added "
+                            f"{titles[j]} to playlist: {names[i][j]}"
+                        )
+                    else:
+                        print(f"Failed: `Playlist` {names[i][j]} not found!")
+                        little_failed = True
+                else:
+                    libraries[i].add_music(names[i][j], titles[j])
+                    print(f"Test: succesfully added "
+                        f"{titles[j]} to playlist: {names[i][j]}"
+                    )
+
+        lengths_2 = []
+        for i in range(len(libraries)):
+            lengths_2.append(len(libraries[i]))
+
+        for i in range(len(lengths_1)):
+            if lengths_1[i] > lengths_2[i]:
+                print(f"Failed: The length should have inceremented!")
+                failed_test_number += 1
+
     except _:
         print(
             f"Failed: the `constructor` raised an exception!"
@@ -236,7 +300,21 @@ def library_test():
     # get
     print("Test: testing the `get()` method.")
     try:
-        pass
+        playlists = []
+        for i in range(len(libraries)):
+            playlist = []
+            for j in range(len(names[i])):
+                playlist.append(libraries[i].get(names[i][j]))
+            playlists.append(playlist)
+        
+        for i in range(len(playlists)):
+            if len(playlists) != len(libraries[i]):
+                print(
+                    f"Failed: couldn't get the exact amount of playlist "
+                    f"contained in a `Library` using the `get_names()` "
+                    f"and the `get()` funcitons!"
+                )
+                little_failed = True
     except _:
         print(
             f"Failed: the `constructor` raised an exception!"
@@ -252,7 +330,17 @@ def library_test():
     # remove
     print("Test: testing the `remove()` method.")
     try:
-        pass
+        for i in range(len(names)):
+            for j in range(len(names[i])):
+                libraries[i].remove(names[i][j])
+
+        for i in range(len(libraries)):
+            if len(libraries[i]) != 0:
+                print(
+                    f"Failed: Couldn't reomove all `Playlists` in `Library` "
+                    f"#{i}!"
+                )
+                little_failed = True
     except _:
         print(
             f"Failed: the `constructor` raised an exception!"
@@ -266,15 +354,27 @@ def library_test():
     test_number += 1
 
     print(f"Passed: {test_number - failed_test_number}/{test_number}.")
+    return failed_test_number, test_number
     
 
 def structures_test():
     # Music test
-    music_test()
+    music_test_number = music_test()
     print()
     # Playlist test
-    playlist_test()
+    playlist_test_number = playlist_test()
     print()
     # Library test
-    library_test()
+    librery_test_number = library_test()
     print()
+    completed_tests_number = (
+        (music_test_number[1] - music_test_number[0])
+        + (playlist_test_number[1] - playlist_test_number[0])
+        + (librery_test_number[1] - librery_test_number[0])
+    )
+    tests_number = (
+        music_test_number[1] 
+        + playlist_test_number[1] 
+        + librery_test_number[1]
+    )
+    print(f"Completed: {completed_tests_number}/{tests_number}")

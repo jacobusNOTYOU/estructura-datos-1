@@ -42,6 +42,7 @@ class Playlist:
     - remove(title: str): borra por titulo una cancion de la lista.
     - get(title: str): obtiene una cancion por titulo.
     - get_titles(): retorna una lista de todos los titulos.
+    - get_authors(): retorna una lista de todos los autores.
     - is_empty(): verifica si la playlist esta vacia.
     - __len__(): retorna la longitud del la lista al usar la funcion 
         len().
@@ -146,6 +147,19 @@ class Playlist:
 
         return titles
 
+    def get_authors(self) -> list[str]:
+        """Retorna una lista de los autores de todas las canciones."""
+        if self.is_empty():
+            return []
+        
+        actual: Node = self.head
+        authors: list[str] = []
+        while actual is not None:
+            authors.append(actual.data.author)
+            actual = actual.next
+
+        return authors
+
     def is_empty(self) -> bool:
         """Verifica si la lista esta vacia."""
         return len(self) <=0
@@ -153,6 +167,12 @@ class Playlist:
     def __len__(self) -> int:
         """Retorna la longitud de la lista al plicarse `len()` en ella."""
         return self._len
+
+    def __iter__(self) -> "Playlist":
+        actual = self.head
+        while actual is not None:
+            yield actual.data
+            actual = actual.next
 
 
 class Library:
@@ -164,13 +184,17 @@ class Library:
     Metodos:
     - append(name: str): crea una `Playlist` llamada `name` y la agrega 
     al final de la lista.
-    - add_music_to_library(name:str,title:str,author:str): agrega una 
+    - add_music(name:str,title:str,author:str): agrega una 
     cancion (de titulo `title` y autor `author`) a una playlist llamada
     `name`.
     - remove(name: str): elimina una `Playlist` de la lista.
+    - remove_music(name:str,title:str): elimina una cancion titulada `title`
+    la playist llamada `name`.
     - get(name: str): obtiene una lista por nombre.
     - get_names(): retorna una lista que contiene los nombres de las 
     `Playlist`s que guarda la lista.
+    - get_music(name:str,title:str): retorna una cancion titulada `title` de la 
+    playlist `name`.
     - is_empty(): verifica si la lista esta vacia.
     - __len__(): retorna la longitud de la lista al aplicarle `len()`.
     """
@@ -205,7 +229,9 @@ class Library:
         actual.next = new_playlsit
         self._len += 1
 
-    def add_music_to_library(self, name: str, title: str, author: str) -> bool:
+    def add_music(
+        self, name: str, title: str, author: str = "unkown"
+    ) -> bool:
         """agrega una cancion (de titulo `title` y autor `author`) a una 
         playlist llamada `name`.
         Parametros:
@@ -256,6 +282,23 @@ class Library:
         self._len -= 1
         return True
 
+    def remove_music(self, name: str, title: str) -> bool:
+        """Elimina el primer `Music` titulado `title` que se encuentra en la
+        `Playlist` llamada `name` si es que se encuentra.
+        Parametros:
+        - name: el nombre de la `Playlist` de la cual eliminar el `Music`.
+        - title: el titulo de la cancion a eliminar.     
+
+        Retorna: `True` si se encuentra una `Playlist` llamada `name` y si esta
+        contiene un `Music` titulado `title`, si no, `False`.
+        """
+
+        playlist: Playlist|None = self.get(name)
+        if playlist is None:
+            return False
+        
+        return playlist.remove(title)
+
     def get(self, name: str) -> Playlist|None:
         """Obtiene una lista por nombre.
         Parametros:
@@ -293,9 +336,32 @@ class Library:
 
         return names
 
+    def get_music(self, name: str, title: str) -> Music:
+        """Retorna la primera cancion titulada `title` de la playlist llamada
+        `name`, si es que la encuentra.
+        Parametros:
+        - name: el nombre de la playlist a la que pertenece la cancion.
+        - title: el titulo de la cancion que se esta buscando.
+
+        Retorna: Un `Music` si es que se encontro una playlist llamda `name` y
+        en esa playlist una cancion titulada `title`.
+        """
+
+        playlist: Playlist|None = self.get(name)
+        if playlist is None:
+            return None
+        
+        music: Music|None = playlist.get(title)
+        return music
+
     def is_empty(self) -> bool:
         return len(self) <= 0
 
     def __len__(self) -> int:
         return self._len
 
+    def __iter__(self):
+        actual = self.head
+        while actual is not None:
+            yield actual.data
+            actual = actual.next

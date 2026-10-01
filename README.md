@@ -10,7 +10,7 @@ Presentar las practicas del curso INF-220.
 
 ```
 Estructura-datos-1/
-├── proyectos   <-- Contiene proyectos medianos
+├── proyectos   <-- Contiene proyectos
 ├── unidad0     <-- Estandares y buenas practicas de codificacion
 ├── unidad1     <-- Modelos de representacion de datos
 ├── unidad2     <-- ADT Polinomio y conjuntos
