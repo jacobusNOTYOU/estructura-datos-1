@@ -62,9 +62,10 @@ def playlist_test() -> int:
     try:
         test_titles = ["ana", "banana", "caravana"]
         test_authors = ["Pedro", "Marcos", "Maria"]
+        test_dirs = ["google.com", "~/videos/el_video.mp5", ""]
         for i in range(len(playlists)):
             for j in range(len(test_titles)):
-                playlists[i].append(test_titles[j], test_authors[j])
+                playlists[i].append(test_titles[j], test_authors[j], test_dirs[j])
         test_number += 1
     except _:
         print(
@@ -121,6 +122,21 @@ def playlist_test() -> int:
             f"Failed: `get_authors()` method raised an Exception."
         )
         failed_test_number += 1
+
+    if little_failed:
+        little_failed = False
+        failed_test_number += 1
+    
+    test_number += 1
+
+    # get_dir
+    print("Test: testing the `get_dir()` method.")
+    try:
+        directions = []
+        for i in range(len(playlists)):
+            directions.append(playlists[i].get_dir(test_titles[i]))
+    except Exception:
+        little_failed = True
 
     if little_failed:
         little_failed = False
@@ -251,6 +267,7 @@ def library_test() -> int:
     print("Test: testing the `add_music()` method.")
     titles = ["stal", "Wo ich auch stehe", ""]
     authors = ["C418", "Abraham"]
+    directions = ["google.con", "~/musics/music.mp5", ""]
     try:
         lengths_1 = []
         for i in range(len(libraries)):
@@ -262,7 +279,8 @@ def library_test() -> int:
                     if libraries[i].add_music(
                                     names[i][j], 
                                     titles[j], 
-                                    authors[j]
+                                    authors[j],
+                                    directions[j]
                                     ):
                         print(f"Test: succesfully added "
                             f"{titles[j]} to playlist: {names[i][j]}"
@@ -271,7 +289,7 @@ def library_test() -> int:
                         print(f"Failed: `Playlist` {names[i][j]} not found!")
                         little_failed = True
                 else:
-                    libraries[i].add_music(names[i][j], titles[j])
+                    libraries[i].add_music(names[i][j], titles[j], direction=directions[j])
                     print(f"Test: succesfully added "
                         f"{titles[j]} to playlist: {names[i][j]}"
                     )
@@ -320,6 +338,32 @@ def library_test() -> int:
             f"Failed: the `constructor` raised an exception!"
         )
         failed_test_number += 1
+
+    if little_failed:
+        little_failed = False
+        failed_test_number += 1
+    
+    test_number += 1
+
+    # get_music_dir
+    print("Test: testing the get_music_dir()` method.")
+    try:
+        dirs = []
+        for i in range(len(names)):
+            dirss = []
+            for j in range(len(titles)):
+                dirss.append(libraries[i].get_music_dir(names[i][j], titles[j]))
+            dirs.append(dirss)
+    except NameError:
+        print(
+            f"Failed: `NameError` was rarised!"
+        )
+        little_failed = True
+    except Exception:
+        print(
+            f"Failed: An exception was raised!"
+        )
+        little_failed = True
 
     if little_failed:
         little_failed = False

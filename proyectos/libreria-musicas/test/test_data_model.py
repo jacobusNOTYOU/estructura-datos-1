@@ -8,7 +8,7 @@ def data_model_test():
 
     failed_proof = False
     failed_tests: int = 0
-    number_of_tests: int = 11
+    number_of_tests: int = 12
     test_number: int = 0
 
     # Casos Comunes
@@ -57,18 +57,19 @@ def data_model_test():
 
     test_titles: list[str] = [ "Stal", "Wet Hands", "Burges in the back"]
     test_authors: list[str] = ["C418", "C418", "WirdAI"]
+    test_dirs: list[str] = ["m.mp3", "/df/", ""]
     test_names.append("Library")
 
     try:
         for n in test_names:
             for i in range(len(test_titles)):
-                data_model.add_music(n, test_titles[i], test_authors[i])
+                data_model.add_music(n, test_titles[i], test_authors[i], test_dirs[i])
     except Exception:
         print(f"Failed: No Exception should be raised!")
         failed_proof = True
 
     try:
-        data_model.add_music("1234", test_titles[0], test_authors[0])
+        data_model.add_music("1234", test_titles[0], test_authors[0], test_dirs[i])
     except NameError:
         pass
     except Exception:
@@ -79,7 +80,7 @@ def data_model_test():
         failed_proof = True
 
     try:
-        data_model.add_music("Library", test_titles[0], test_authors[0])
+        data_model.add_music("Library", test_titles[0], test_authors[0], test_dirs[i])
     except NameError:
         pass
     except Exception:
@@ -90,7 +91,7 @@ def data_model_test():
         failed_proof = True
 
     try:
-        data_model.add_music(test_names[0], test_titles[0], test_authors[0])
+        data_model.add_music(test_names[0], test_titles[0], test_authors[0], test_dirs[0])
     except Exception:
         print("Failed: An Exception was raised!")
         failed_proof = True
@@ -205,6 +206,32 @@ def data_model_test():
             musics_dics.append(json.loads(m))
     except Exception:
         print("Failed: Failed to deserialize a song!")
+        failed_proof = True
+
+    if failed_proof:
+        failed_proof = False
+        failed_tests += 1
+    test_number += 1
+    print(f"Passed: {test_number - failed_tests}/{number_of_tests}.")
+
+    # get_music_dir
+    print("Test: Testing method `get_music_dir()`.")
+    try:
+        directions: list[str] = []
+        for i in range(len(names)):
+            dirs: list[str] =[]
+            for j in range(len(test_titles)):
+                dirs.append(data_model.get_music_dir(names[i], test_titles[j]))
+            directions.append(dirs)
+    except NameError:
+        print(
+            f"Failed: Playlist or title not found!"
+        )
+        failed_proof = True
+    except Exception:
+        print(
+            f"Failed: An exception was raised!"
+        )
         failed_proof = True
 
     if failed_proof:

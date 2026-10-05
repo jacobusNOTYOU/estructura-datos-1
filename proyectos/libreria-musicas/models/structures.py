@@ -6,16 +6,15 @@ cuales son:
 - Library
 """
 
-
 class Music:
     """Define las datos que componen una cancion:
     - title: el titulo de la cancion.
     - author: el autor de la cancion.
     """
-    def __init__(self, title: str, author: str = "unkown") -> None:
+    def __init__(self, title: str, author: str = "unkown", direction: str = "") -> None:
         self.title: str = title
         self.author: str = author
-
+        self.direction: str = direction     
 
 class Node:
     """Esta es una clase de apoyo para implementar las estructuras de 
@@ -37,12 +36,13 @@ class Playlist:
     - head: el comienzo de la Playlist.
 
     Metodos:
-    - append(title: str, author: str="unkown"): agrega una cancion al 
+    - append(title: str, author: str="unkown",direction:str=""): agrega una cancion al 
     final de la lista.
     - remove(title: str): borra por titulo una cancion de la lista.
     - get(title: str): obtiene una cancion por titulo.
     - get_titles(): retorna una lista de todos los titulos.
     - get_authors(): retorna una lista de todos los autores.
+    - get_dir(title:str): retornar la direccion de una cancion por titulo.
     - is_empty(): verifica si la playlist esta vacia.
     - __len__(): retorna la longitud del la lista al usar la funcion 
         len().
@@ -53,16 +53,17 @@ class Playlist:
         self.head: Node|None = None
         self._len: int = 0
 
-    def append(self, title: str, author: str = "unkown") -> None:
+    def append(self, title: str, author: str = "unkown", direction: str = "") -> None:
         """Agrega una cancion al final de la lista.
         Parametros:
         - title: titulo de la cancion.
         - author: autor de la cancion.
+        - direction: la direccion en la que se encuetra la cancion.
 
         Complejiidad: O(n)
         """
 
-        new_music: Music = Music(title, author)
+        new_music: Music = Music(title, author, direction)
         new_node: Node = Node(new_music)
         if self.is_empty():
             self.head = new_node
@@ -160,6 +161,39 @@ class Playlist:
 
         return authors
 
+    def get_dir(self, title: str) -> str:
+        """Retorna la direccion de la primera cancion titulada `title`.
+        Parametros:
+        - title: el titulo de la cancion de la cual obtener la direccion.
+
+        Retorna: si encuentra una cancion(una instancia de `Muisc`) con 
+        el titulo dado, retorna su direccion.
+
+        Excepciones:
+        - NameError: si no se encuentra una cancion titulada `title` o si esta
+        vacia.
+
+        Complejidad: O(n).
+        """
+
+        if self.is_empty():
+            raise NameError(
+                f"Error: La playlist esta vacia!"
+                )
+        
+        actual: Node = self.head
+        previous: Node|None = None
+        while actual is not None and actual.data.title != title:
+            previous = actual
+            actual = actual.next
+
+        if actual is None:
+            raise NameError(
+                f"Error: No se encontro una cancion titulada {title}!"
+                )
+        
+        return actual.data.direction
+
     def is_empty(self) -> bool:
         """Verifica si la lista esta vacia."""
         return len(self) <=0
@@ -184,7 +218,7 @@ class Library:
     Metodos:
     - append(name: str): crea una `Playlist` llamada `name` y la agrega 
     al final de la lista.
-    - add_music(name:str,title:str,author:str): agrega una 
+    - add_music(name:str,title:str,author:str,direction:str): agrega una 
     cancion (de titulo `title` y autor `author`) a una playlist llamada
     `name`.
     - remove(name: str): elimina una `Playlist` de la lista.
@@ -195,6 +229,8 @@ class Library:
     `Playlist`s que guarda la lista.
     - get_music(name:str,title:str): retorna una cancion titulada `title` de la 
     playlist `name`.
+    - get_music_dir(name:str,title:str): retorna la direccion de la primera 
+    cancion titulada `title` de la playlist llamada `name`.
     - is_empty(): verifica si la lista esta vacia.
     - __len__(): retorna la longitud de la lista al aplicarle `len()`.
     """
@@ -230,7 +266,7 @@ class Library:
         self._len += 1
 
     def add_music(
-        self, name: str, title: str, author: str = "unkown"
+        self, name: str, title: str, author: str = "unkown", direction: str = ""
     ) -> bool:
         """agrega una cancion (de titulo `title` y autor `author`) a una 
         playlist llamada `name`.
@@ -238,6 +274,7 @@ class Library:
         - name: nombre de la playlist en la cual agregar la cancion.
         - title: titulo de la cancion a agregar.
         - author: autor de la cancion a agregar.
+        - direction: direccion en la que se encuentra la cancion.
 
         Retorna: `True` si encuentra una `Playlist` llamada `name` y 
         agrego la cancion, de otra manera, `False`.
@@ -247,7 +284,7 @@ class Library:
         if playlist is None:
             return False
 
-        playlist.append(title, author)
+        playlist.append(title, author, direction)
         return True
 
     def remove(self, name: str) -> bool:
@@ -353,6 +390,34 @@ class Library:
         
         music: Music|None = playlist.get(title)
         return music
+
+    def get_music_dir(self, name: str, title: str) -> str:
+        """Retorna la direccion de la primera cancion titulada `title` en la
+        playlist llamada `name`.
+        Parametros:
+        - name: el nombre de la playlist en la que se encuentra la cancion.
+        - title: el titulo de la cancion.
+
+        Excepciones:
+        - NameError: si no se encuentra la una cancion titulada `title` en la 
+        playlist llamada `name`.
+        """
+
+        playlist: Playlist|None = self.get(name)
+        if playlist is None:
+            raise NameError(
+                f"Error: No se encontro una playlist llamada '{name}'!"
+            )
+        
+        try:
+            direction: str = playlist.get_dir(title)
+        except NameError:
+            raise NameError(
+                f"Error: No se encontro una cancion titulada '{title}' en la "
+                f"playlist '{name}'!"
+            )
+        
+        return direction
 
     def is_empty(self) -> bool:
         return len(self) <= 0

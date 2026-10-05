@@ -18,12 +18,13 @@ class DataModel:
 
     Methods:
     - add_playlist(name:str)
-    - add_music(playlist:str,title:str,author:str)
+    - add_music(playlist:str,title:str,author:str,direction:str)
 
     - get_playlist(name:str)
     - get_playlist_names()
     - get_music(title:str)
     - get_music_titles(playlist:str)
+    - get_music_dir(playlist:str,title:str)
 
     - remove_playlist(name:str)
     - remove_music(playlist:str,titile:str)
@@ -60,7 +61,9 @@ class DataModel:
         
         self._library.append(name)
 
-    def add_music(self, playlist: str, title: str, author: str) -> None:
+    def add_music(
+        self, playlist: str, title: str, author: str, direction: str
+        ) -> None:
         """Agrea una cancion a una playlist. En el caso de "Library" 
         las no debe haber otra cancion identica en la libreria, esta
         condicion no aplica a cualquier otra playlist.
@@ -68,6 +71,7 @@ class DataModel:
         - playlist: nombre de la playlist en la que agregar la cancion.
         - title: titulo de la cancion a agregar.
         - author: autor de la cancion a agregar.
+        - direction: direccion en la que se guarda la cancion.
 
         Excepciones:
         - NameError: si no encuentra una `Playlist` llamada `playlist` en 
@@ -91,7 +95,7 @@ class DataModel:
                     f"playlist 'Library'."
                     )
         
-        self._library.add_music(playlist, title, author)
+        self._library.add_music(playlist, title, author, direction)
 
     def get_playlist(self, name: str) -> str:
         """Retorna una lista de canciones de la primera `Playlist` llamada 
@@ -148,7 +152,8 @@ class DataModel:
 
         return ('{' 
             + '"title": '+ '"' + music.title + '", ' 
-            + '"author": '+ '"' + music.author + '"' 
+            + '"author": '+ '"' + music.author + '", ' 
+            + '"direction":' + '"' + music.direction + '"'
             +'}'
         )
 
@@ -169,6 +174,20 @@ class DataModel:
                 )
 
         return the_playlist.get_titles()
+    
+    def get_music_dir(self, playist: str, title: str) -> str:
+        """Retorna la direccion de la primera cancion titulada `title` la 
+        playlist llamada `name`.
+        Parametros:
+        - playlist: el nombre de la playlist en la que se encuetra la cancion. 
+        - title: el titulo de la cancion.
+
+        Excepciones:
+        - NameError: si no se encuetra una cancion titulada `title` en una 
+        playlist llamada `name`.
+        """
+
+        return self._library.get_music_dir(playist, title)
 
     def remove_playlist(self, name: str) -> None:
         """Elimina una `Playlist` de la libreria.
@@ -288,7 +307,8 @@ class DataModel:
                     self.add_music(
                         playlist_names[i], 
                         playlists[i][j]["title"], 
-                        playlists[i][j]["author"]
+                        playlists[i][j]["author"],
+                        playlists[i][j]["direction"]
                     )
         except Exception:
             raise ValueError(
