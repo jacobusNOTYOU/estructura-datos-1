@@ -28,6 +28,20 @@ class Node:
         self.next: "Node"|None = None
 
 
+class DoubleNode:
+    """Un nodo con dos punteros, uno apuntando  al siguiente y el otro 
+    apuntando al anterior.
+    Atributos:
+    - data: el dato que guarda el nodo.
+    - next: el nodo que le sigue a este nodo
+    - prev: el nodo anterior a este nodo
+    """
+    def __init__(self, data: any) -> None:
+        self.data: any = data
+        self.next: "DoubleNode"|None = None
+        self.prev: "DoubleNode"|None = None
+
+
 class Playlist:
     """Es un conjunto nombrado de `Music`, implementado en una lista
     enlazada simple.
@@ -44,13 +58,17 @@ class Playlist:
     - get_authors(): retorna una lista de todos los autores.
     - get_dir(title:str): retornar la direccion de una cancion por titulo.
     - is_empty(): verifica si la playlist esta vacia.
+    - next(): Retorna el que le sigue.
+    - prev(): Retorna el anterior.
+    - restart(): Reinicia el recorrido.
     - __len__(): retorna la longitud del la lista al usar la funcion 
         len().
     """
 
     def __init__(self, name: str) -> None:
         self.name: str = name
-        self.head: Node|None = None
+        self.head: DoubleNode|None = None
+        self._actual: DoubleNode|None = self.head
         self._len: int = 0
 
     def append(self, title: str, author: str = "unkown", direction: str = "") -> None:
@@ -64,22 +82,32 @@ class Playlist:
         """
 
         new_music: Music = Music(title, author, direction)
-        new_node: Node = Node(new_music)
+        new_node: DoubleNode = DoubleNode(new_music)
+        at_start: bool = False
+        if self._actual == self.head:
+            at_start = True
+
         if self.is_empty():
             self.head = new_node
+
+            if at_start:
+                self._actual = self.head
+
             self._len += 1
             return
 
         if len(self) == 1:
             self.head.next = new_node
+            new_node.prev = self.head
             self._len += 1
             return
 
-        actual: Node = self.head
+        actual: DoubleNode = self.head
         while actual.next is not None:
             actual = actual.next
 
         actual.next = new_node
+        new_node.prev = actual
         self._len += 1
 
     def remove(self, title: str) -> bool:
@@ -95,8 +123,12 @@ class Playlist:
         if self.is_empty():
             return False
         
-        actual: Node = self.head
-        previous: Node|None = None
+        at_start: bool = False
+        if self._actual == self.head:
+            at_start = True
+
+        actual: DoubleNode = self.head
+        previous: DoubleNode|None = None
         while actual is not None and actual.data.title != title:
             previous = actual
             actual = actual.next
@@ -106,10 +138,16 @@ class Playlist:
         
         if previous is not None:
             previous.next = actual.next
+            if actual.next is not None:
+                actual.next.prev = previous
             self._len -= 1
             return True
 
         self.head = actual.next
+        if actual.next is not None:
+            actual.next.prev = None
+        if at_start:
+            self._actual = self.head
         self._len -= 1
         return True
 
@@ -126,7 +164,7 @@ class Playlist:
         if self.is_empty():
             return None
 
-        actual: Node = self.head
+        actual: DoubleNode = self.head
         while actual is not None and actual.data.title != title:
             actual = actual.next
 
@@ -140,7 +178,7 @@ class Playlist:
         if self.is_empty():
             return []
         
-        actual: Node = self.head
+        actual: DoubleNode = self.head
         titles: list[str] = []
         while actual is not None:
             titles.append(actual.data.title)
@@ -153,7 +191,7 @@ class Playlist:
         if self.is_empty():
             return []
         
-        actual: Node = self.head
+        actual: DoubleNode = self.head
         authors: list[str] = []
         while actual is not None:
             authors.append(actual.data.author)
@@ -181,8 +219,8 @@ class Playlist:
                 f"Error: La playlist esta vacia!"
                 )
         
-        actual: Node = self.head
-        previous: Node|None = None
+        actual: DoubleNode = self.head
+        previous: DoubleNode|None = None
         while actual is not None and actual.data.title != title:
             previous = actual
             actual = actual.next
@@ -197,6 +235,41 @@ class Playlist:
     def is_empty(self) -> bool:
         """Verifica si la lista esta vacia."""
         return len(self) <=0
+
+    def next(self, loop: bool = False) -> Music:
+        """Retorn el que sigue."""
+        if loop:
+            if self._actual.next is None:
+                self._actual = self.head
+            else:
+                self._actual = self._actual.next
+        else:
+            if self._actual.next is None:
+                raise StopIteration("Se llego al final de la playlist.")
+            else:
+                self._actual = self._actual.next
+        return self._actual.data
+
+    def prev(self, loop: bool = False) -> Music:
+        """Retorna el anterior."""
+        if loop:
+            if self._actual.prev is None:
+                actual: Node = self.head
+                while actual.next is not None:
+                    actual = actual.next
+                self._actual = actual
+            else:
+                self._actual = self._actual.prev
+        else:
+            if self._actual.prev is None:
+                raise StopIteration("Se llego al principio de la playlist.")
+            else:
+                self._actual = self._actual.prev
+        return self._actual.data
+
+    def restart(self) -> None:
+        """Mueve el recorrido al inicio."""
+        self._actual = self.head
 
     def __len__(self) -> int:
         """Retorna la longitud de la lista al plicarse `len()` en ella."""
@@ -231,6 +304,9 @@ class Library:
     playlist `name`.
     - get_music_dir(name:str,title:str): retorna la direccion de la primera 
     cancion titulada `title` de la playlist llamada `name`.
+    - next(name:str): Retorna el siguiente en la playlist llamada `name`.
+    - prev(name:str): Retorna el anterior en la playlist llamada `name`.
+    - restart(name:str): Reinicia una playlist llamada `name`.
     - is_empty(): verifica si la lista esta vacia.
     - __len__(): retorna la longitud de la lista al aplicarle `len()`.
     """
@@ -418,6 +494,33 @@ class Library:
             )
         
         return direction
+
+    def next(self, name: str, loop: bool = False) -> Music:
+        """Retorna el que sigue en la playlist `name`."""
+        playlist: Playlist|None = self.get(name)
+        if playlist is None:
+            raise NameError(
+                f"Error: no se encontro una playlist llamada '{name}'!"
+            )
+        return playlist.next(loop)
+
+    def prev(self, name: str, loop: bool = False) -> Music:
+        """Retorna el anterior en la playlist `name`."""
+        playlist: Playlist|None = self.get(name)
+        if playlist is None:
+            raise NameError(
+                f"Error: no se encontro una playlist llamada '{name}'!"
+            )
+        return playlist.prev(loop)
+
+    def restart(self, name: str) -> None:
+        """Retorna el anterior en la playlist `name`."""
+        playlist: Playlist|None = self.get(name)
+        if playlist is None:
+            raise NameError(
+                f"Error: no se encontro una playlist llamada '{name}'!"
+            )
+        return playlist.restart()
 
     def is_empty(self) -> bool:
         return len(self) <= 0

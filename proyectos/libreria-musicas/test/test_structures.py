@@ -177,7 +177,50 @@ def playlist_test() -> int:
         failed_test_number += 1
 
     test_number += 1
+
+    # next
+    print("Test: testing the `next()` method.")
+    try:
+        musics = []
+        for i in range(len(playlists)):
+            mus = []
+            for j in range(len(titles)):
+                mus.append(playlists[i].next(True))
+            musics.append(mus)
+    except Exception:
+        print(
+            f"Failed: an exception was raised!"
+        )
+        little_failed = True
     
+    if little_failed:
+        little_failed = False
+        failed_test_number += 1
+
+    test_number += 1
+
+    # prev
+    print("Test: testing the `prev()` method.")
+    try:
+        musics = []
+        for i in range(len(playlists)):
+            mus = []
+            for j in range(len(titles)):
+                mus.append(playlists[i].prev(True))
+            musics.append(mus)
+    except Exception:
+        print(
+            f"Failed: an exception was raised!"
+        )
+        little_failed = True
+        raise
+    
+    if little_failed:
+        little_failed = False
+        failed_test_number += 1
+
+    test_number += 1
+
     # remove
     print("Test: testing the `remove()` method.")
     try:

@@ -29,6 +29,10 @@ class DataModel:
     - remove_playlist(name:str)
     - remove_music(playlist:str,titile:str)
 
+    - next(name:str,loop:bool)
+    - prev(name:str,loop:bool)
+    - restart(name:str)
+
     - to_json()
     - number_playlists()
     - seek_playlist(name: str)
@@ -220,6 +224,18 @@ class DataModel:
                 f"Error: No se encontro una cancion titulada: {title} en una"
                 f" playlist llamada: {playlist}!"
             )
+
+    def next(self, name: str, loop: bool = False) -> str:
+        """Retorna la siguiente cancion en la playlist llamada `name`."""
+        return self._library.next(name, loop)
+
+    def prev(self, name: str, loop: bool = False) -> str:
+        """Retorna la anterior cancion en la playlist llamada `name`."""
+        return self._library.prev(name, loop)
+
+    def restart(self, name: str) -> None:
+        """Reinicia la playlist llamada `name`."""
+        return self._library.restart(name)
 
     def to_json(self) -> str:
         """Retorna una cadena que contiene toda la libreria en formato json."""
