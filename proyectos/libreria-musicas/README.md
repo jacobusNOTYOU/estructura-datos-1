@@ -1,7 +1,7 @@
 # Libreria de Musica Web
 
 Una simple libreria de musica en el que se puede organizar canciones en 
-playlists. Es un WSGI web aplication. No reproduce musica, solo la organiza.
+playlists. Es un WSGI web aplication.
 
 # Estructura del proyecto
 

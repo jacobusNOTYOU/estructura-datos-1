@@ -3,7 +3,7 @@ Usando las estrucuras de datos definidas en el modulo `structures.py`,
 las cuales son: `Music`, `Playlist` y `Library`.
 """
 
-from models.structures import *
+from .structures import *
 import json
 
 
@@ -11,9 +11,9 @@ class DataModel:
     """Maneja los datos de la libreria usando las estructuras de datos.
     Incluye manejo de persistencia con json, en su comportamiento la libreria
     tiene una playlist no borrable(despues de cargarla libreria del archivo) 
-    llamada "Libreria" y sus canciones deben ser unicas (a diferencia de las
+    llamada "Library" y sus canciones deben ser unicas (a diferencia de las
     otras playlists) los datos se reciben y retornan en json con las 
-    excepciones de `get_playlist-names()` y `get_music_titles()` que 
+    excepciones de `get_playlist_names()` y `get_music_titles()` que 
     retornan listas.
 
     Methods:
@@ -22,7 +22,7 @@ class DataModel:
 
     - get_playlist(name:str)
     - get_playlist_names()
-    - get_music(title:str)
+    - get_music(playlist:str,title:str)
     - get_music_titles(playlist:str)
     - get_music_dir(playlist:str,title:str)
 
@@ -227,15 +227,29 @@ class DataModel:
 
     def next(self, name: str, loop: bool = False) -> str:
         """Retorna la siguiente cancion en la playlist llamada `name`."""
-        return self._library.next(name, loop)
+        music: Music|None = self._library.next(name, loop)
+        return (
+            "{ "
+            '"title": "' + music.title + '", '
+            '"author": "' + music.author + '", '
+            '"direction": "' + music.direction + '" '
+            " }"
+        )
 
     def prev(self, name: str, loop: bool = False) -> str:
         """Retorna la anterior cancion en la playlist llamada `name`."""
-        return self._library.prev(name, loop)
+        music: Music|None = self._library.prev(name, loop)
+        return (
+            "{ "
+            '"title": "' + music.title + '", '
+            '"author": "' + music.author + '", '
+            '"direction": "' + music.direction + '" '
+            " }"
+        )
 
     def restart(self, name: str) -> None:
         """Reinicia la playlist llamada `name`."""
-        return self._library.restart(name)
+        self._library.restart(name)
 
     def to_json(self) -> str:
         """Retorna una cadena que contiene toda la libreria en formato json."""

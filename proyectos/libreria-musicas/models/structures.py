@@ -2,6 +2,7 @@
 cuales son:
 - Music
 - Node
+- DoubleNode
 - Playlist
 - Library
 """
@@ -44,25 +45,27 @@ class DoubleNode:
 
 class Playlist:
     """Es un conjunto nombrado de `Music`, implementado en una lista
-    enlazada simple.
+    enlazada doble.
     Atributos:
     - name: el nombre de la playlist.
     - head: el comienzo de la Playlist.
 
     Metodos:
-    - append(title: str, author: str="unkown",direction:str=""): agrega una cancion al 
-    final de la lista.
-    - remove(title: str): borra por titulo una cancion de la lista.
-    - get(title: str): obtiene una cancion por titulo.
-    - get_titles(): retorna una lista de todos los titulos.
-    - get_authors(): retorna una lista de todos los autores.
-    - get_dir(title:str): retornar la direccion de una cancion por titulo.
-    - is_empty(): verifica si la playlist esta vacia.
-    - next(): Retorna el que le sigue.
-    - prev(): Retorna el anterior.
-    - restart(): Reinicia el recorrido.
-    - __len__(): retorna la longitud del la lista al usar la funcion 
-        len().
+    - append(title:str,author:str="unkown",direction:str="")    
+
+    - remove(title: str)
+
+    - get(title: str)
+    - get_titles()
+    - get_authors()
+    - get_dir(title:str)
+
+    - next()
+    - prev()
+    - restart()
+
+    - is_empty()
+    - __len__()
     """
 
     def __init__(self, name: str) -> None:
@@ -238,6 +241,7 @@ class Playlist:
 
     def next(self, loop: bool = False) -> Music:
         """Retorn el que sigue."""
+        play: Music = self._actual.data
         if loop:
             if self._actual.next is None:
                 self._actual = self.head
@@ -248,10 +252,11 @@ class Playlist:
                 raise StopIteration("Se llego al final de la playlist.")
             else:
                 self._actual = self._actual.next
-        return self._actual.data
+        return play
 
     def prev(self, loop: bool = False) -> Music:
         """Retorna el anterior."""
+        play: Music = self._actual.data
         if loop:
             if self._actual.prev is None:
                 actual: Node = self.head
@@ -265,7 +270,7 @@ class Playlist:
                 raise StopIteration("Se llego al principio de la playlist.")
             else:
                 self._actual = self._actual.prev
-        return self._actual.data
+        return play
 
     def restart(self) -> None:
         """Mueve el recorrido al inicio."""
@@ -289,26 +294,23 @@ class Library:
     - head: el inicio de la lista.
 
     Metodos:
-    - append(name: str): crea una `Playlist` llamada `name` y la agrega 
-    al final de la lista.
-    - add_music(name:str,title:str,author:str,direction:str): agrega una 
-    cancion (de titulo `title` y autor `author`) a una playlist llamada
-    `name`.
-    - remove(name: str): elimina una `Playlist` de la lista.
-    - remove_music(name:str,title:str): elimina una cancion titulada `title`
-    la playist llamada `name`.
-    - get(name: str): obtiene una lista por nombre.
-    - get_names(): retorna una lista que contiene los nombres de las 
-    `Playlist`s que guarda la lista.
-    - get_music(name:str,title:str): retorna una cancion titulada `title` de la 
-    playlist `name`.
-    - get_music_dir(name:str,title:str): retorna la direccion de la primera 
-    cancion titulada `title` de la playlist llamada `name`.
-    - next(name:str): Retorna el siguiente en la playlist llamada `name`.
-    - prev(name:str): Retorna el anterior en la playlist llamada `name`.
-    - restart(name:str): Reinicia una playlist llamada `name`.
-    - is_empty(): verifica si la lista esta vacia.
-    - __len__(): retorna la longitud de la lista al aplicarle `len()`.
+    - append(name: str)
+    - add_music(name:str,title:str,author:str,direction:str)
+
+    - remove(name: str)
+    - remove_music(name:str,title:str)
+
+    - get(name: str)
+    - get_names()
+    - get_music(name:str,title:str)
+    - get_music_dir(name:str,title:str)
+
+    - next(name:str)
+    - prev(name:str)
+    - restart(name:str)
+
+    - is_empty()
+    - __len__()
     """
 
     def __init__(self) -> None:

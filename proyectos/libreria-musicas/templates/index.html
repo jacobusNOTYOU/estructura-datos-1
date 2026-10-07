@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Re:musica</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body id="body">
+        <dialog id="add-playlist-dialog">
+            <input id="add-playlist-dialog-exit" type="button" value="X">
+            <input id="add-playlist-dialog-input" type="text">
+            <input id="add-playlist-dialog-save" type="button" value="Save">
+            <input id="add-playlist-dialog-cancel" type="button" value="Cancel">
+        </dialog>
+        <dialog id="remove-playlist-dialog" data-playlist-name>
+            <input id="remove-playlist-dialog-save" type="button" value="Remove">
+            <input id="remove-playlist-dialog-cancel" type="button" value="Cancel">
+        </dialog>
+
+        <dialog id="add-music-dialog">
+            <input id="add-music-dialog-input" type="text">
+            <input id="add-music-dialog-save" type="button" value="Save">
+            <input id="add-music-dialog-cancel" type="button" value="Cancel">
+        </dialog>
+
+        <dialog id="error-dialog">
+            <input id="error-dialog-exit-button" type="button" value="X">
+            <input id="error-dialog-label" type="label">
+            <input id="error-dialog-ok-button" type="button" value="Ok">
+        </dialog>
+        <div id="content"></div>
+        <script src="{{url_for('static', filename='script.js')}}"></script>
+    </body>
+</html>
