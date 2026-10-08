@@ -126,8 +126,8 @@ def model_interface(instruction: str, data: any):
             except NameError:
                 return (
                     '{ '
-                    f'"message":"Error: song {data[0]} not found in playlist '
-                    f'{data[1]}"'
+                    f'"message":"Error: song {data[1]} not found in playlist '
+                    f'{data[0]}"'
                     ' }'
                 )
 

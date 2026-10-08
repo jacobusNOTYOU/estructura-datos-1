@@ -31,7 +31,128 @@ async function addPlaylist(newPlaylist) {
         playlistList.append(newPlaylistElemtent);
     }
     else {
-        showErrorDialog(`The playlist ${newPlaylist} already exist!`);
+        showErrorDialog(`La playlist ${newPlaylist} ya existe!`);
+    }
+}
+
+async function getPlaylist(playlistName) {
+    let response = await reportOp(
+        'get_playlist',
+        playlistName
+    );
+
+    if (Object.hasOwn(response, 'message')) {
+        console.log(`Error: Playlist ${playlistName} not found!`);
+        showErrorDialog(
+            `Error: No se encontro la playlist ${playlistName}!`
+        );
+    }
+    else {
+        return response;
+    }
+}
+
+async function removePlaylist(oldPlaylist) {
+    let response = await reportOp(
+        'remove_playlist',
+        oldPlaylist
+    )
+
+    if (response['message'] === 'Success!') {
+        document.getElementById(oldPlaylist).remove();
+        if (oldPlaylist === activePlaylist) {
+            let playlist = await getPlaylist('Library');
+            activePlaylist = 'Library';
+            renderPlaylist(playlist, false, false);
+        }
+    }
+    else {
+        showErrorDialog(`No se encontro ${oldPlaylist} la playlist!`);
+    }
+}
+
+async function displayPlaylist(playlistName, withAdd, withRemove) {
+    let response = await reportOp(
+        'get_playlist',
+        playlistName
+    );
+
+    if (Object.hasOwn(response, 'message')) {
+        showErrorDialog(
+            `Error: El servidor no encontro la playlist ${playlistName}!`
+        );
+    }
+    else {
+        activePlaylist = playlistName;
+        renderPlaylist(response, withAdd, withRemove);
+    }
+}
+
+async function getMusic(title) {
+    let response = await reportOp(
+        'get_music',
+        ['Library', title]
+    );
+
+    if (Object.hasOwn(response, 'message')) {
+        showErrorDialog(
+            `No se encontro la cancion ${title} en la playlist Library`
+
+        );
+    }
+    else {
+        return response;
+    }
+}
+
+async function addMusic(playlist, title, author, direction) {
+    let response = await reportOp(
+        'add_music',
+        [
+            playlist,
+            {
+                title : title,
+                author : author,
+                direction : direction
+            }
+        ]
+    );
+
+    if (response['message'] !== 'Success!') {
+        showErrorDialog(
+            `Error: No se encontro la playlist ${playlist} o la cancion `
+            + `${title} ya esta en la Libreria!`
+        );
+    }
+}
+
+async function addSelectedMusic() {
+    let selectedMusic = document.getElementsByClassName('add-selected');
+
+    for (let musicElement of selectedMusic) {
+        let title = musicElement.attributes[1].nodeValue;
+        let music = await getMusic(title);
+
+        addMusic(activePlaylist, music['title'], music['author'], music['direction']);
+    }
+
+    let playlist = await getPlaylist(activePlaylist);
+    renderPlaylist(playlist);
+}
+
+async function removeMusic(playlist, title) {
+    let response = await reportOp(
+        'remove_music',
+        [playlist, title]
+    );
+
+    if (response['message'] !== 'Success!') {
+        console.log(
+            `Error: Song ${title} not found in playlist ${playlist}!`
+        );
+        showErrorDialog(
+            `Error: La cancion ${title} no se encontro en la playlist ${playlist}`
+        );
     }
 }
 
@@ -49,6 +170,74 @@ function showErrorDialog(Error) {
     dialog.show();
 }
 
+function showRemovePlaylistDialog(playlist) {
+    let dialog = document.getElementById('remove-playlist-dialog');
+    dialog.playlistName = playlist;
+
+    let label = document.getElementById('remove-playlist-dialog-label');
+    label.value = `Serguro que quiere borrar ${playlist}?`;
+
+    dialog.show();
+}
+
+function showAddMusicDialog() {
+    createAddMusicDialog();
+    let dialog = document.getElementById('add-music-dialog');
+    dialog.show();
+    renderLibraryList();
+}
+
+function switchAddMusicState(musicName) {
+    let article = document.getElementById('add-' + musicName);
+    if (article.className === 'add-selected') {
+        article.className = 'add-unselected';
+    }
+    else {
+        article.className = 'add-selected';
+    }
+
+    let Label = document.getElementById(musicName + 'add-selected-label');
+    if (Label !== null) {
+        Label.setAttribute('id', musicName + 'add-unselected-label');
+        Label.setAttribute('class', 'add-unselected-label');
+    }
+    else {
+
+        Label = document.getElementById(musicName + 'add-unselected-label');
+        if (Label !== null) {
+            Label.setAttribute('id', musicName + 'add-selected-label');
+            Label.setAttribute('class', 'add-selected-label');
+        }
+    }
+
+    let Button = document.getElementById(musicName + 'add-selected-button');
+    if (Button !== null) {
+        Button.setAttribute('id', musicName + 'add-unselected-button');
+        Button.className = 'add-unselected-button';
+        Button.value = 'agregar';
+    }
+    else {
+
+        Button = document.getElementById(musicName + 'add-unselected-button');
+        if (Button !== null) {
+            Button.id = musicName + 'add-selected-button';
+            Button.className = 'add-selected-button';
+            Button.value = 'quitar';
+        }
+    }
+
+}
+
+function showRemoveMusicDialog() {
+    let dialog = document.getElementById('remove-music-dialog');
+
+    //  set label
+    let label = document.getElementById(dialog.id + '-label');
+    label.value = `Seguro que quires eliminar ${activePlaylist + '-' + activeAuthor}?`
+
+    dialog.show();
+}
+
 //  Rendering
 function createButton(parent, className, value, event) {
     let button = document.createElement('input');
@@ -57,7 +246,9 @@ function createButton(parent, className, value, event) {
     button.type = 'button';
     button.className = className;
     button.value = value;
-    button.onclick = event;
+    if (event !== null) {
+        button.onclick = event;
+    }
 
     return button;
 }
@@ -74,15 +265,16 @@ function createLabel(parent, className, value) {
     return label;
 }
 
-function createPlaylistElement(playlist, withRemove = true) {
+function createPlaylistElement(playlist, withRemove = true, withAdd = true) {
     let playlistElement = document.createElement('article');
+    playlistElement.id = playlist;
 
     let playlistButton = createButton(
         playlist, 
         'playlist-button',
         playlist,
-        function (){}   //  Needs an event!
-    )
+        function (){ displayPlaylist(playlist, withAdd, withRemove); }
+    );
 
     let removeButton = null;
     if (withRemove) {
@@ -90,7 +282,7 @@ function createPlaylistElement(playlist, withRemove = true) {
             playlist,
             'remove-button',
             'X',
-            function (){}   //  Needs an event!
+            function (){ showRemovePlaylistDialog(playlist); }
         )
     }
 
@@ -104,10 +296,11 @@ function createPlaylistElement(playlist, withRemove = true) {
 
 function createMusicElement(title, author, withRemove = true) {
     let musicElement = document.createElement('article');
+    musicElement.id = title + '-' + author;
 
     let label = createLabel(
         title + '-' + author,
-        'label',
+        '-label',
         title + ' By ' + author
     )
 
@@ -115,17 +308,24 @@ function createMusicElement(title, author, withRemove = true) {
     if (withRemove) {
         removeButton = createButton(
             title + '-' + author,
-            'remove-button',
+            '-remove-button',
             'X',
-            function (){}   //  Needs an event!
+            function (){
+                activeTitle = title;
+                activeAuthor = author;
+                showRemoveMusicDialog();
+            }
         );
     }
     
     let playButton = createButton(
         title + '-' + author,
-        'play-button',
+        '-play-button',
         '>',
-        function (){}   //  Needs an event!
+        function (){
+            activeTitle = title;
+            activeAuthor = author;
+        }   //  Needs an event!
     )
 
     musicElement.append(label);
@@ -137,23 +337,104 @@ function createMusicElement(title, author, withRemove = true) {
     return musicElement;
 }
 
-function renderPlaylist(playlist, addButton = true) {
+/*
+ *  the class 'add-selected-button' and 'add-selected-label' 
+ *  represents a selected song.
+ *  the class 'add-unselected-button' and 'add-unselected-label' 
+ *  represents a selected song.
+ */
+function createAddMusicElement(title, author) {
+    let musicElement = document.createElement('article');
+    musicElement.id = 'add-' + title + '-' + author;
+    musicElement.setAttribute('data-title', title);
+    musicElement.setAttribute('data-author', author);
+
+    let label = createLabel(
+        title + '-' + author,
+        'add-unselected-label',
+        title + ' By ' + author
+    )
+
+    let addButton = createButton(
+        title + '-' + author,
+        'add-unselected-button',
+        'agregar',
+        function (){ 
+            switchAddMusicState(title + '-' + author); 
+        }
+    )
+
+    musicElement.append(label);
+    musicElement.append(addButton);
+    
+    return musicElement;
+}
+
+function createAddMusicDialog() {
+    let temp = document.getElementById('add-music-dialog');
+    if (temp !== null) {
+        temp.remove();
+    }
+    let dialog = document.createElement('dialog');
+    dialog.id = 'add-music-dialog';
+
+    //  exit button
+    let exitButton = createButton(
+        dialog.id,
+        '-exit-button',
+        'X',
+        function () {
+            dialog.close();
+        }
+    );
+
+    //  label
+    let label = createLabel(
+        dialog.id,
+        '-label',
+        'Elige las canciones para tu nueva playlist!'
+    );
+
+    //  save button
+    let saveButton = createButton(
+        dialog.id,
+        '-save-button',
+        'Guardar',
+        function () {
+            dialog.close();
+            addSelectedMusic();
+        }
+    );
+
+    //  add elements
+    dialog.append(exitButton);
+    dialog.append(label);
+    dialog.append(saveButton);
+
+    //  add to the DOM
+    let body = document.getElementById('body');
+    body.append(dialog);
+}
+
+function renderPlaylist(playlist, addButton = true, withRemove = true) {
     //  create the playlist 
     let musicListTemp = document.getElementById('music-list');
     if (musicListTemp !== null) {
         musicListTemp.remove();
     }
     let musicList = document.createElement('div');
+    musicList.id = 'music-list';
     //  addButton
     if (addButton) {
         let buttonAdd = createButton(
-            playlist, 'add-button', '+', function () {}
+            playlist, 'add-button', '+', function () {
+                showAddMusicDialog();
+            }
         );
         musicList.append(buttonAdd);
     }
     //  Render each music
     for (let music of playlist) {
-        let withRemove = music == "Library";
         let musicElement = createMusicElement(
             music['title'],
             music['author'],
@@ -181,7 +462,12 @@ function renderPlaylistList(playlists, addButton = true) {
         if (playlist === 'Library') {
             withRemove = false;
         }
-        let playlistElement = createPlaylistElement(playlist, withRemove);
+        let withAdd = true;
+        if (playlist === 'Library') {
+            withRemove = false;
+            withAdd = false;
+        }
+        let playlistElement = createPlaylistElement(playlist, withRemove, withAdd);
         playlsitList.append(playlistElement);
     }
 
@@ -204,9 +490,32 @@ function renderLibrary(library) {
     renderPlaylistList(playlistNames);
 
     // Render de active playlist
-    renderPlaylist(library['Library'], false);
+    renderPlaylist(library['Library'], false, false);
 }
 
+async function renderLibraryList() {
+    let response = await reportOp('get_playlist', 'Library');
+
+    if (Object.hasOwn(response, 'message')) {
+        showErrorDialog(
+            `Error: El servidor no encontro la Libreria!`
+        );
+    }
+    else {
+        let dialog = document.getElementById('add-music-dialog');
+        for (let music of response) {
+            dialog.append(createAddMusicElement(
+                music['title'],
+                music['author']
+            ));
+        }
+    }
+}
+
+//  initial setup
+let activePlaylist = 'Library';
+let activeTitle;
+let activeAuthor;
 get().then((result) => renderLibrary(result));
 
 //  Specific Events
@@ -216,11 +525,16 @@ document.getElementById('add-playlist-dialog-exit').onclick = function() {
     dialog.close();
 }
 
-document.getElementById('add-playlist-dialog-save').onclick = function() {
+document.getElementById('add-playlist-dialog-save').onclick = async function() {
     let dialog = document.getElementById('add-playlist-dialog');
-    let newPlaylist = document.getElementById('add-playlist-dialog-input').value;
+    let input = document.getElementById('add-playlist-dialog-input');
+    let newPlaylist = input.value;
+    input.value = '';
     dialog.close();
     addPlaylist(newPlaylist);
+    activePlaylist = newPlaylist;
+    let playlist = await getPlaylist(newPlaylist);
+    renderPlaylist(playlist);
 }
 
 document.getElementById('add-playlist-dialog-cancel').onclick = function() {
@@ -236,5 +550,36 @@ document.getElementById('error-dialog-exit-button').onclick = function() {
 
 document.getElementById('error-dialog-ok-button').onclick = function() {
     let dialog = document.getElementById('error-dialog');
+    dialog.close();
+}
+
+//  remove-playlist-dialog
+document.getElementById('remove-playlist-dialog-remove-button').onclick = function () {
+    let dialog = document.getElementById('remove-playlist-dialog');
+
+    removePlaylist(dialog.playlistName);
+
+    dialog.close();
+}
+
+document.getElementById('remove-playlist-dialog-cancel-button').onclick = function () {
+    let dialog = document.getElementById('remove-playlist-dialog');
+    dialog.close();
+}
+
+//  remove-music-dialog
+document.getElementById('remove-music-dialog-remove-button').onclick = async function () {
+    let dialog = document.getElementById('remove-music-dialog');
+
+    let state = removeMusic(activePlaylist, activeTitle);
+    if (state) {
+        document.getElementById(activeTitle + '-' + activeAuthor).remove();
+    }
+
+    dialog.close();
+}
+
+document.getElementById('remove-music-dialog-cancel-button').onclick = function () {
+    let dialog = document.getElementById('remove-music-dialog');
     dialog.close();
 }

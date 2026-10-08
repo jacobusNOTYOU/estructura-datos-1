@@ -1,6 +1,15 @@
 #content {
     display: flex;
 }
+
 #music-player {
     display: none;
+}
+
+.add-unselected-label {
+    background-color: grey;
+}
+
+.add-unselected-button {
+    background-color: grey;
 }
