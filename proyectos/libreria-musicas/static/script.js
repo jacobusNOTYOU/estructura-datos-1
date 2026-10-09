@@ -268,6 +268,7 @@ function createLabel(parent, className, value) {
 function createPlaylistElement(playlist, withRemove = true, withAdd = true) {
     let playlistElement = document.createElement('article');
     playlistElement.id = playlist;
+    playlistElement.className = 'playlist-element'
 
     let playlistButton = createButton(
         playlist, 
@@ -281,7 +282,7 @@ function createPlaylistElement(playlist, withRemove = true, withAdd = true) {
         removeButton = createButton(
             playlist,
             'remove-button',
-            'X',
+            trashBinSymbol,
             function (){ showRemovePlaylistDialog(playlist); }
         )
     }
@@ -297,11 +298,12 @@ function createPlaylistElement(playlist, withRemove = true, withAdd = true) {
 function createMusicElement(title, author, withRemove = true) {
     let musicElement = document.createElement('article');
     musicElement.id = title + '-' + author;
+    musicElement.className = 'music-element';
 
     let label = createLabel(
         title + '-' + author,
         '-label',
-        title + ' By ' + author
+        title + ' Por ' + author
     )
 
     let removeButton = null;
@@ -309,7 +311,7 @@ function createMusicElement(title, author, withRemove = true) {
         removeButton = createButton(
             title + '-' + author,
             '-remove-button',
-            'X',
+            trashBinSymbol,
             function (){
                 activeTitle = title;
                 activeAuthor = author;
@@ -321,10 +323,11 @@ function createMusicElement(title, author, withRemove = true) {
     let playButton = createButton(
         title + '-' + author,
         '-play-button',
-        '>',
+        playSymbol,
         function (){
             activeTitle = title;
             activeAuthor = author;
+            renderMusicPlayer();
         }   //  Needs an event!
     )
 
@@ -352,7 +355,7 @@ function createAddMusicElement(title, author) {
     let label = createLabel(
         title + '-' + author,
         'add-unselected-label',
-        title + ' By ' + author
+        title + ' Por ' + author
     )
 
     let addButton = createButton(
@@ -459,16 +462,19 @@ function renderPlaylistList(playlists, addButton = true) {
     //  Render each playlist elements
     for (let playlist of playlists) {
         let withRemove = true;
-        if (playlist === 'Library') {
-            withRemove = false;
-        }
+
         let withAdd = true;
         if (playlist === 'Library') {
             withRemove = false;
             withAdd = false;
         }
         let playlistElement = createPlaylistElement(playlist, withRemove, withAdd);
-        playlsitList.append(playlistElement);
+        if (playlist === 'Library') {
+            playlsitList.prepend(playlistElement);
+        }
+        else {
+            playlsitList.append(playlistElement);
+        }
     }
 
     //  addButton
@@ -512,10 +518,106 @@ async function renderLibraryList() {
     }
 }
 
+function createMusicPlayer() {
+    let temp = document.getElementById('music-player');
+    if (temp !== null) {
+        temp.remove();
+    }
+    let musicPlayer = document.createElement('article');
+    musicPlayer.id = 'music-player';
+
+    let head = document.createElement('div');
+    head.id = 'music-player-head';
+
+    let headLabel = createLabel(
+        head.id,
+        'label',
+        activeTitle + ' Por ' + activeAuthor
+    )
+
+    let headExitButton = createButton(
+        head.id,
+        'exit-button',
+        'X',
+        function () {
+            musicPlayer.remove();
+            document.documentElement.style.setProperty('--content-height', '100vh');
+        }
+    )
+
+    head.append(headLabel);
+    head.append(headExitButton);
+
+    let indicadors = document.createElement('div');
+    indicadors.id = 'music-player-indicators';
+
+    let currenTimeLabel = createLabel(
+        indicadors.id,
+        'music-player-current-time',
+        '00:00'
+    );
+
+    let progressBar = document.createElement('progress');
+    progressBar.id = 'music-player-progress-bar';
+    progressBar.max = 0;
+    progressBar.value = 0;
+
+    let lengthTimeLabel = createLabel(
+        indicadors.id,
+        'music-player-length-time',
+        '00:00'
+    );
+
+    indicadors.append(currenTimeLabel);
+    indicadors.append(progressBar);
+    indicadors.append(lengthTimeLabel);
+
+    let controls = document.createElement('div');
+    controls.id = 'music-player-controls';
+
+    let prevButton = createButton(
+        controls.id,
+        'prev-button',
+        prevSymbol
+    );
+
+    let playButton = createButton(
+        controls.id,
+        'play-button',
+        playSymbol
+    );
+
+    let nextButton = createButton(
+        controls.id,
+        'next-button',
+        nextSymbol
+    );
+
+    controls.append(prevButton);
+    controls.append(playButton);
+    controls.append(nextButton);
+
+    musicPlayer.append(head);
+    musicPlayer.append(indicadors);
+    musicPlayer.append(controls);
+
+    document.getElementById('body').append(musicPlayer);
+}
+
+async function renderMusicPlayer() {
+    document.documentElement.style.setProperty('--content-height', '80vh');
+    createMusicPlayer();
+}
+
 //  initial setup
 let activePlaylist = 'Library';
 let activeTitle;
 let activeAuthor;
+let prevSymbol = '\u25AE\u25C0';
+let playSymbol = '\u25B6';
+let pauseSymbol = '\u25AE\u25AE';
+let nextSymbol = '\u25B6\u25AE';
+let trashBinSymbol = '\u{1F5D1}';
 get().then((result) => renderLibrary(result));
 
 //  Specific Events
@@ -582,4 +684,18 @@ document.getElementById('remove-music-dialog-remove-button').onclick = async fun
 document.getElementById('remove-music-dialog-cancel-button').onclick = function () {
     let dialog = document.getElementById('remove-music-dialog');
     dialog.close();
+}
+
+//  toggle-theme
+document.getElementById('toggle-theme').onclick = function() {
+    let toggle = document.getElementById('toggle-theme');
+    let body = document.getElementById('body');
+    if (toggle.value === '\u{25CF}') {
+        toggle.value = '\u{25CB}';
+        body.className = 'light';
+    }
+    else {
+        toggle.value = '\u{25CF}';
+        body.className = 'dark';
+    }
 }
