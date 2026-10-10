@@ -1,0 +1,80 @@
+{
+"Library": [ 
+{
+"title": "Stal", 
+"author": "C418", 
+"direction":"~/Media/stal.mp3"
+
+}, 
+{
+"title": "Wet Hands", 
+"author": "C418", 
+"direction":"~/Media/wet_hands.mp3"
+
+}, 
+{
+"title": "Sweden", 
+"author": "C418", 
+"direction":"~/Media/sweden.mp3"
+
+}, 
+{
+"title": "What I've Done", 
+"author": "Linking Park", 
+"direction":"~/Media/whativedone.mp5"
+
+}, 
+{
+"title": "Castillo Fuerte", 
+"author": "Martin Lutero", 
+"direction":"~/Media/castillofuerte.mp3"
+
+}, 
+{
+"title": "Roads Untraveled", 
+"author": "Linking Park", 
+"direction":"~/Media/roadsuntraveled.mp3"
+
+} 
+], 
+"Cool": [ 
+{
+"title": "What I've Done", 
+"author": "Linking Park", 
+"direction":"~/Media/whativedone.mp5"
+
+}, 
+{
+"title": "Castillo Fuerte", 
+"author": "Martin Lutero", 
+"direction":"~/Media/castillofuerte.mp3"
+
+}, 
+{
+"title": "Roads Untraveled", 
+"author": "Linking Park", 
+"direction":"~/Media/roadsuntraveled.mp3"
+
+} 
+], 
+"C418": [ 
+{
+"title": "Stal", 
+"author": "C418", 
+"direction":"~/Media/stal.mp3"
+
+}, 
+{
+"title": "Wet Hands", 
+"author": "C418", 
+"direction":"~/Media/wet_hands.mp3"
+
+}, 
+{
+"title": "Sweden", 
+"author": "C418", 
+"direction":"~/Media/sweden.mp3"
+
+} 
+]
+}

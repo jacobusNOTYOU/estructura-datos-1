@@ -172,6 +172,7 @@ progress::-moz-progress-bar {
 
 .music-player-current-time {
     grid-column: 1;
+    text-align: center;
 }
 
 #music-player-progress-bar {
@@ -182,6 +183,7 @@ progress::-moz-progress-bar {
 
 .music-player-length-time {
     grid-column: 3;
+    text-align: center;
 }
 
 #music-player-controls {

@@ -118,14 +118,14 @@ class DataModel:
             )
         
         titles: list[str] = self.get_music_titles(name)
-        playlist: str = '[ '
+        playlist: str = '[ \n'
 
         for i in range(len(titles)):
             playlist += self.get_music(name, titles[i])
             if i < len(titles) -1:
-                playlist += ', '
+                playlist += ', \n'
 
-        playlist += ' ]'
+        playlist += ' \n]'
 
         return playlist
 
@@ -154,11 +154,11 @@ class DataModel:
                 f"llamada {playlist}!"
                 )
 
-        return ('{' 
-            + '"title": '+ '"' + music.title + '", ' 
-            + '"author": '+ '"' + music.author + '", ' 
-            + '"direction":' + '"' + music.direction + '"'
-            +'}'
+        return ('{\n' 
+            + '"title": '+ '"' + music.title + '", \n' 
+            + '"author": '+ '"' + music.author + '", \n' 
+            + '"direction":' + '"' + music.direction + '"\n'
+            +'\n}'
         )
 
     def get_music_titles(self, playlist: str) -> list[str]:
@@ -254,14 +254,14 @@ class DataModel:
     def to_json(self) -> str:
         """Retorna una cadena que contiene toda la libreria en formato json."""
         names: list[str] = self.get_playlist_names()
-        library: str = '{ '
+        library: str = '{\n'
         for i in range(len(names)):
             library += (
                 '"' + names[i] + '": ' + self.get_playlist(names[i])
             )
             if i < len(names)-1:
-                library += ', '
-        library += ' }'
+                library += ', \n'
+        library += '\n}'
         return library
 
     def number_playlists(self) -> int:

@@ -1,14 +1,6 @@
 """En este modulo se integra el modelo junto al view, completando asi el 
 modelo MVC.
 
-Datos para el renderizado de la UI:
-- Los nombre de las playlist.
-- Las canciones de la playlist activa.
-
-Datos para la actualizacion del modelo:
-- Una instruccion.
-- Los datos para la instruccion.
-
 Interface:
 { "instruction":"", "data":"" }
 
@@ -72,9 +64,41 @@ restart(playlist:str)
 
 # Functions
 from ..models.logistic_engine import DataModel
+import sys
+import json
+
+config_path: str = (
+    sys.path[0] + '/' +
+    __name__.split('.')[0] +  '/' +
+    '.config/config.json'
+)
+
+try:
+    with open(config_path, 'r') as f:
+        config: dict = json.load(f)
+except FileNotFoundError:
+    raise FileNotFoundError(
+        f"Error: config file not found at {config_path}!"
+    )
+
+try:
+    with open(config['library_path'], 'r') as f:
+        f.read()
+except FileNotFoundError:
+    with open(config['library_path'], 'w') as f:
+        f.write(json.dumps({
+            "Library" : []
+        }, indent=2))
+
 
 data_model: DataModel = DataModel()
-data_model.load('data.json')
+data_model.load(config['library_path'])
+
+def save(args):
+    try:
+        data_model.save(config['library_path'])
+    except Exception:
+        print('Error: While saving!')
 
 def model_interface(instruction: str, data: any):
     match(instruction):
@@ -194,8 +218,7 @@ bp: Blueprint = Blueprint('main', __name__)
 def index():
     return render_template('index.html')
 
-#   Datos para el renderizado
-#   Datos para el modelo
+#   Acceso al modelo
 @bp.route('/data', methods=("GET", "POST"))
 def data():
     if request.method == "POST":
