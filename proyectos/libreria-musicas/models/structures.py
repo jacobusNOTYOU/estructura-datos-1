@@ -60,6 +60,7 @@ class Playlist:
     - get_authors()
     - get_dir(title:str)
 
+    - play()
     - next()
     - prev()
     - restart()
@@ -239,9 +240,22 @@ class Playlist:
         """Verifica si la lista esta vacia."""
         return len(self) <=0
 
+    def play(self, title) -> Music:
+        """Retorna la cacion `title` y actualiza el puntero a este."""
+        actual: Node|None = self.head
+        while actual is not None and actual.data.title != title:
+            actual = actual.next
+        
+        if actual is None:
+            raise NameError(
+                f"Error: No  se encontro una cancio titulada {title}!"
+            )
+
+        self._actual = actual
+        return self._actual.data
+
     def next(self, loop: bool = False) -> Music:
         """Retorn el que sigue."""
-        play: Music = self._actual.data
         if loop:
             if self._actual.next is None:
                 self._actual = self.head
@@ -252,11 +266,11 @@ class Playlist:
                 raise StopIteration("Se llego al final de la playlist.")
             else:
                 self._actual = self._actual.next
+        play: Music = self._actual.data
         return play
 
     def prev(self, loop: bool = False) -> Music:
         """Retorna el anterior."""
-        play: Music = self._actual.data
         if loop:
             if self._actual.prev is None:
                 actual: Node = self.head
@@ -270,6 +284,7 @@ class Playlist:
                 raise StopIteration("Se llego al principio de la playlist.")
             else:
                 self._actual = self._actual.prev
+        play: Music = self._actual.data
         return play
 
     def restart(self) -> None:
@@ -305,6 +320,7 @@ class Library:
     - get_music(name:str,title:str)
     - get_music_dir(name:str,title:str)
 
+    - play(name:str,title:str)
     - next(name:str)
     - prev(name:str)
     - restart(name:str)
@@ -496,6 +512,18 @@ class Library:
             )
         
         return direction
+
+    def play(self, name: str, title: str) -> Music:
+        """Retorna la cancion titulada `title` y mueve el puntero a dicha 
+        cancion.
+        """
+        playlist: Playlist|None = self.get(name)
+        if playlist is None:
+            raise NameError(
+                f"Error: no se encontro una playlist llamada '{name}'!"
+            )
+
+        return playlist.play(title)
 
     def next(self, name: str, loop: bool = False) -> Music:
         """Retorna el que sigue en la playlist `name`."""

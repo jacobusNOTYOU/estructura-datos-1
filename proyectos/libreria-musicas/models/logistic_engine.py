@@ -29,6 +29,7 @@ class DataModel:
     - remove_playlist(name:str)
     - remove_music(playlist:str,titile:str)
 
+    - play(name:str,title:str)
     - next(name:str,loop:bool)
     - prev(name:str,loop:bool)
     - restart(name:str)
@@ -224,6 +225,17 @@ class DataModel:
                 f"Error: No se encontro una cancion titulada: {title} en una"
                 f" playlist llamada: {playlist}!"
             )
+
+    def play(self, name: str, title: str) -> str:
+        """Retorna y marca la cancion titulada `title`."""
+        music: Music|None = self._library.play(name, title)
+        return (
+            "{ "
+            '"title": "' + music.title + '", '
+            '"author": "' + music.author + '", '
+            '"direction": "' + music.direction + '" '
+            " }"
+        )
 
     def next(self, name: str, loop: bool = False) -> str:
         """Retorna la siguiente cancion en la playlist llamada `name`."""

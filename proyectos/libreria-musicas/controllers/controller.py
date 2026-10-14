@@ -191,6 +191,16 @@ def model_interface(instruction: str, data: any):
                 )
             return '{ ' + '"message":"Success!"' + ' }'
 
+        case 'play':
+            try:
+                return data_model.play(data[0], data[1])
+            except NameError:
+                return (
+                    '{ ' + 
+                    '"message":"Error: Playlist or song not found!"' + 
+                    ' }'
+                )
+
         case 'next':
             try:
                 return data_model.next(data[0], data[1])
@@ -209,8 +219,9 @@ def model_interface(instruction: str, data: any):
 
 
 # Blueprint
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, Response
 import json
+from os import path
 
 bp: Blueprint = Blueprint('main', __name__)
 
@@ -226,3 +237,18 @@ def data():
         return model_interface(request_data['instruction'], request_data['data'])
 
     return data_model.to_json()
+
+@bp.route('/mp3/<music_direction>')
+def stream_mp3(music_direction):
+    def generate():
+        with open(config['music_path'] + music_direction, 'rb') as mp3f:
+            data = mp3f.read(1024)
+            while data:
+                yield data
+                data = mp3f.read(1024)
+    response = Response(generate(), mimetype='audio/mpeg')
+    response.accept_ranges = 'bytes'
+    response.content_length = path.getsize(
+        config['music_path'] + music_direction
+    )
+    return response

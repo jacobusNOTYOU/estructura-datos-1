@@ -1,79 +1,65 @@
 {
 "Library": [ 
 {
-"title": "Stal", 
-"author": "C418", 
-"direction":"~/Media/stal.mp3"
+"title": "First Snow", 
+"author": "Scott Buckley", 
+"direction":"FirstSnow.mp3"
+
+}, 
+{
+"title": "Neon", 
+"author": "Scott Buckley", 
+"direction":"Neon.mp3"
 
 }, 
 {
 "title": "Wet Hands", 
 "author": "C418", 
-"direction":"~/Media/wet_hands.mp3"
+"direction":"13 - Wet Hands.mp3"
+
+}, 
+{
+"title": "Minecraft", 
+"author": "C418", 
+"direction":"08 - Minecraft.mp3"
 
 }, 
 {
 "title": "Sweden", 
 "author": "C418", 
-"direction":"~/Media/sweden.mp3"
+"direction":"18 - Sweden.mp3"
 
 }, 
 {
-"title": "What I've Done", 
-"author": "Linking Park", 
-"direction":"~/Media/whativedone.mp5"
-
-}, 
-{
-"title": "Castillo Fuerte", 
-"author": "Martin Lutero", 
-"direction":"~/Media/castillofuerte.mp3"
-
-}, 
-{
-"title": "Roads Untraveled", 
-"author": "Linking Park", 
-"direction":"~/Media/roadsuntraveled.mp3"
-
-} 
-], 
-"Cool": [ 
-{
-"title": "What I've Done", 
-"author": "Linking Park", 
-"direction":"~/Media/whativedone.mp5"
-
-}, 
-{
-"title": "Castillo Fuerte", 
-"author": "Martin Lutero", 
-"direction":"~/Media/castillofuerte.mp3"
-
-}, 
-{
-"title": "Roads Untraveled", 
-"author": "Linking Park", 
-"direction":"~/Media/roadsuntraveled.mp3"
+"title": "Moog City", 
+"author": "C418", 
+"direction":"06 - Moog City.mp3"
 
 } 
 ], 
 "C418": [ 
 {
-"title": "Stal", 
+"title": "Wet Hands", 
 "author": "C418", 
-"direction":"~/Media/stal.mp3"
+"direction":"13 - Wet Hands.mp3"
 
 }, 
 {
-"title": "Wet Hands", 
+"title": "Minecraft", 
 "author": "C418", 
-"direction":"~/Media/wet_hands.mp3"
+"direction":"08 - Minecraft.mp3"
 
 }, 
 {
 "title": "Sweden", 
 "author": "C418", 
-"direction":"~/Media/sweden.mp3"
+"direction":"18 - Sweden.mp3"
+
+}, 
+{
+"title": "Moog City", 
+"author": "C418", 
+"direction":"06 - Moog City.mp3"
 
 } 
 ]

@@ -188,7 +188,7 @@ progress::-moz-progress-bar {
 
 #music-player-controls {
     display: grid;
-    grid-template-columns: 30px 30px 30px;
+    grid-template-columns: 30px 30px 30px 30px 30px ;
     grid-template-rows: 30px;
     justify-content: center;
     grid-column-gap: 5px;

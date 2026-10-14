@@ -156,6 +156,64 @@ async function removeMusic(playlist, title) {
     }
 }
 
+async function setPlayMusic(playlist, title) {
+    let response = await reportOp('play',[
+        playlist,
+        title
+    ]);
+
+    if (Object.hasOwn(response, 'message')) {
+        showErrorDialog(
+            `Error: Playlist ${playlist} or song ${title} not found!`
+        );
+    }
+    else {
+        playingPlaylist = playlist;
+        playingTitle = response['title'];
+        playingAuthor = response['author'];
+        playingDir = response['direction'];
+        finishPlaylist = false;
+    }
+}
+
+async function setNextMusic(playlist) {
+    let response = await reportOp('next',[
+        playlist,
+        loop
+    ]);
+
+    if (!Object.hasOwn(response, 'message')) {
+        playingTitle = response['title'];
+        playingAuthor = response['author'];
+        playingDir = response['direction'];
+        finishPlaylist = false;
+        return true;
+    }
+    else {
+        finishPlaylist = true;
+        return false;
+    }
+}
+
+async function setPrevMusic(playlist) {
+    let response = await reportOp('prev',[
+        playlist,
+        loop
+    ]);
+
+    if (!Object.hasOwn(response, 'message')) {
+        playingTitle = response['title'];
+        playingAuthor = response['author'];
+        playingDir = response['direction'];
+        return true;
+        finishPlaylist = false;
+    }
+    else {
+        finishPlaylist = true;
+        return false;
+    }
+}
+
 //  Events
 function showAddPlaylistDialog() {
     let dialog = document.getElementById('add-playlist-dialog');
@@ -236,6 +294,104 @@ function showRemoveMusicDialog() {
     label.value = `Seguro que quires eliminar ${activePlaylist + '-' + activeAuthor}?`
 
     dialog.show();
+}
+
+async function setAudio() {
+    let track = document.getElementById('track');
+    track.src = '/mp3/' + playingDir;
+    track.load();
+    updateTimer = setInterval(seekUpdate, 1000);
+    track.ondurationchange = function() { 
+        let durationLabel = document.querySelector('.music-player-length-time');
+        let durationMinutes = Math.floor(track.duration / 60);
+        let durationSeconds = Math.floor(track.duration - durationMinutes * 60);
+
+        if (durationMinutes < 10) { durationMinutes = '0' + durationMinutes; }
+        if (durationSeconds < 10) { durationSeconds = '0' + durationSeconds; }
+
+        durationLabel.value = durationMinutes + ':' + durationSeconds;
+    }
+    track.onended = function() {
+        nextMusic(playingPlaylist);
+    }
+}
+
+async function playMusic(playlist, title) {
+    clearInterval(updateTimer);
+    await setPlayMusic(playlist, title);
+
+    await setAudio();
+
+    renderMusicPlayer();
+
+    document.getElementById('track').play();
+}
+
+async function nextMusic(playlist) {
+    let may_continue = await setNextMusic(playlist);
+
+    await setAudio();
+
+    renderMusicPlayer();
+
+    if (may_continue) {
+        document.getElementById('track').play();
+    }
+}
+
+async function prevMusic(playlist) {
+    let may_continue = await setPrevMusic(playlist);
+
+    await setAudio();
+
+    renderMusicPlayer();
+
+    if (may_continue) {
+        document.getElementById('track').play();
+    }
+}
+
+function playPause() {
+    let button = document.querySelector('.play-button');
+    let track = document.getElementById('track');
+    if (button.value === playSymbol) {
+        button.value = pauseSymbol;
+        track.play();
+    }
+    else {
+        button.value = playSymbol;
+        track.pause();
+    }
+}
+
+function seekUpdate() {
+    let track = document.getElementById('track');
+    let seekPosition = 0;
+    let progressBar = document.getElementById('music-player-progress-bar');
+    let currentTimeLabel = document.querySelector('.music-player-current-time');
+    let durationLabel = document.querySelector('.music-player-length-time')
+    if (!isNaN(track.duration)) {
+        seekPosition = track.currentTime * (100 / track.duration);
+        progressBar.value = seekPosition;
+
+        let currentMinutes = Math.floor(track.currentTime / 60);
+        let currentSeconds = Math.floor(track.currentTime - currentMinutes * 60);
+
+        if (currentMinutes < 10) { currentMinutes = '0' + currentMinutes; }
+        if (currentSeconds < 10) { currentSeconds = '0' + currentSeconds; }
+
+        currentTimeLabel.value = currentMinutes + ':' + currentSeconds;
+
+    }
+}
+
+function seekTo() {
+    let track = document.getElementById('track');
+
+    let progress = document.getElementById('music-player-progress-bar').value;
+    position = track.duration * (progress / 100);
+
+    track.currentTime = position;
 }
 
 //  Rendering
@@ -324,11 +480,10 @@ function createMusicElement(title, author, withRemove = true) {
         title + '-' + author,
         '-play-button',
         playSymbol,
-        function (){
+        async function (){
             activeTitle = title;
-            activeAuthor = author;
-            renderMusicPlayer();
-        }   //  Needs an event!
+            playMusic(activePlaylist, title);
+        }  
     )
 
     musicElement.append(label);
@@ -518,11 +673,53 @@ async function renderLibraryList() {
     }
 }
 
+/**
+ * Music Player Plan:
+ *  Phase 1: First Load
+ *      - Render the music player.
+ *      - Load the audio.
+ *      - Set initial indicators values. X
+ *      - Play the selected track.
+ * 
+ *  Phase 2: Controls
+ *      - Exit Button:
+ *          - Close the music player.
+ *          - Stop the current track.
+ * 
+ *      - Bar:
+ *          - Show the current progress.
+ *          - Seek to in the current track.
+ *          - Update the indicators values.
+ * 
+ *      - Prev Button:
+ *          - Load the previous track.
+ *          - Play the previous track.
+ *          - Update indicators and labels.
+ * 
+ *      - Play Button:
+ *          - Pause/Play the current track.
+ * 
+ *      - Next Button:
+ *          - Load the next track.
+ *          - Play the next track.
+ *          - Update indicators and labels.
+ * 
+ * 
+ *  Phase 3: Automatics
+ *      - Update indicators when track is playing.
+ *      - Play next track when the current track ends.
+ * 
+ * OPS:
+ * 
+ * 
+ */
+
 function createMusicPlayer() {
     let temp = document.getElementById('music-player');
     if (temp !== null) {
         temp.remove();
     }
+
     let musicPlayer = document.createElement('article');
     musicPlayer.id = 'music-player';
 
@@ -532,7 +729,7 @@ function createMusicPlayer() {
     let headLabel = createLabel(
         head.id,
         'label',
-        activeTitle + ' Por ' + activeAuthor
+        playingTitle + ' Por ' + playingAuthor
     )
 
     let headExitButton = createButton(
@@ -540,7 +737,9 @@ function createMusicPlayer() {
         'exit-button',
         'X',
         function () {
+            clearInterval(updateTimer);
             musicPlayer.remove();
+            document.getElementById('track').pause()
             document.documentElement.style.setProperty('--content-height', '100vh');
         }
     )
@@ -557,10 +756,13 @@ function createMusicPlayer() {
         '00:00'
     );
 
-    let progressBar = document.createElement('progress');
+    let progressBar = document.createElement('input');
     progressBar.id = 'music-player-progress-bar';
-    progressBar.max = 0;
+    progressBar.type = 'range';
+    progressBar.min = 0;
+    progressBar.max = 100;
     progressBar.value = 0;
+    progressBar.onchange = function() { seekTo(); };
 
     let lengthTimeLabel = createLabel(
         indicadors.id,
@@ -578,24 +780,49 @@ function createMusicPlayer() {
     let prevButton = createButton(
         controls.id,
         'prev-button',
-        prevSymbol
+        prevSymbol,
+        function() { prevMusic(playingPlaylist); }
     );
+
+    let playButtonSymbol = finishPlaylist? playSymbol: pauseSymbol;
 
     let playButton = createButton(
         controls.id,
         'play-button',
-        playSymbol
+        playButtonSymbol,
+        playPause
     );
 
     let nextButton = createButton(
         controls.id,
         'next-button',
-        nextSymbol
+        nextSymbol,
+        function() { 
+            nextMusic(playingPlaylist); 
+        }
     );
+
+    let loopToggleSymbol = loop? loopSymbol: playThroughSymbol;
+    let loopToggle = createButton(
+        controls.id,
+        'loop-toggle',
+        loopToggleSymbol,
+        function() {
+            if (loop) {
+                loop = false;
+                loopToggle.value = playThroughSymbol;
+            }
+            else {
+                loop = true;
+                loopToggle.value = loopSymbol;
+            }
+        }
+    )
 
     controls.append(prevButton);
     controls.append(playButton);
     controls.append(nextButton);
+    controls.append(loopToggle);
 
     musicPlayer.append(head);
     musicPlayer.append(indicadors);
@@ -610,14 +837,27 @@ async function renderMusicPlayer() {
 }
 
 //  initial setup
+// Rendering Globals
 let activePlaylist = 'Library';
 let activeTitle;
 let activeAuthor;
+let activeDir = 'FirstSnow.mp3';
+let loop = false;
+let finishPlaylist = false;
 let prevSymbol = '\u25AE\u25C0';
 let playSymbol = '\u25B6';
 let pauseSymbol = '\u25AE\u25AE';
 let nextSymbol = '\u25B6\u25AE';
 let trashBinSymbol = '\u{1F5D1}';
+let loopSymbol = "\uD83D\uDD01";
+let playThroughSymbol = "\u21C4";
+
+//  Track Globals
+let playingPlaylist;
+let playingTitle;
+let playingAuthor;
+let playingDir;
+let updateTimer;
 get().then((result) => renderLibrary(result));
 
 //  Specific Events
