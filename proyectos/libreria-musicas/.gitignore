@@ -2,4 +2,6 @@
 
 *.pyc
 __pycache__/
-/data
+**/data
+**/dist
+libreria_musicas/data/**

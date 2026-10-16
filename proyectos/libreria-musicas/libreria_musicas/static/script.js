@@ -1,7 +1,7 @@
 //  Data Fetchers
 async function get() {
-    response = await fetch('/data')
-    return response.json()
+    let response = await fetch('/data');
+    return response.json();
 }
 
 async function reportOp(instruction, data) {
@@ -187,11 +187,9 @@ async function setNextMusic(playlist) {
         playingAuthor = response['author'];
         playingDir = response['direction'];
         finishPlaylist = false;
-        return true;
     }
     else {
         finishPlaylist = true;
-        return false;
     }
 }
 
@@ -205,12 +203,10 @@ async function setPrevMusic(playlist) {
         playingTitle = response['title'];
         playingAuthor = response['author'];
         playingDir = response['direction'];
-        return true;
         finishPlaylist = false;
     }
     else {
         finishPlaylist = true;
-        return false;
     }
 }
 
@@ -297,7 +293,12 @@ function showRemoveMusicDialog() {
 }
 
 async function setAudio() {
-    let track = document.getElementById('track');
+    let temp = document.getElementById('track');
+    if (temp !== null) {
+        temp.remove();
+    }
+    let track = document.createElement('audio');
+    track.id = 'track';
     track.src = '/mp3/' + playingDir;
     track.load();
     updateTimer = setInterval(seekUpdate, 1000);
@@ -314,6 +315,7 @@ async function setAudio() {
     track.onended = function() {
         nextMusic(playingPlaylist);
     }
+    document.getElementById('body').append(track);
 }
 
 async function playMusic(playlist, title) {
@@ -328,25 +330,27 @@ async function playMusic(playlist, title) {
 }
 
 async function nextMusic(playlist) {
-    let may_continue = await setNextMusic(playlist);
+    clearInterval(updateTimer);
+    await setNextMusic(playlist);
 
     await setAudio();
 
     renderMusicPlayer();
 
-    if (may_continue) {
+    if (!finishPlaylist) {
         document.getElementById('track').play();
     }
 }
 
 async function prevMusic(playlist) {
-    let may_continue = await setPrevMusic(playlist);
+    clearInterval(updateTimer);
+    await setPrevMusic(playlist);
 
     await setAudio();
 
     renderMusicPlayer();
 
-    if (may_continue) {
+    if (!finishPlaylist) {
         document.getElementById('track').play();
     }
 }
@@ -389,7 +393,7 @@ function seekTo() {
     let track = document.getElementById('track');
 
     let progress = document.getElementById('music-player-progress-bar').value;
-    position = track.duration * (progress / 100);
+    let position = track.duration * (progress / 100);
 
     track.currentTime = position;
 }
@@ -406,6 +410,19 @@ function createButton(parent, className, value, event) {
         button.onclick = event;
     }
 
+    return button;
+}
+
+function createRemoveButton(event) {
+    let button = document.createElement('div');
+    button.className = 'remove-button';
+    button.onclick = event;
+
+    let image = document.createElement('img');
+    image.src = trashPath;
+    image.className = 'remove-img';
+
+    button.append(image);
     return button;
 }
 
@@ -435,12 +452,9 @@ function createPlaylistElement(playlist, withRemove = true, withAdd = true) {
 
     let removeButton = null;
     if (withRemove) {
-        removeButton = createButton(
-            playlist,
-            'remove-button',
-            trashBinSymbol,
-            function (){ showRemovePlaylistDialog(playlist); }
-        )
+        removeButton = createRemoveButton(
+            function() { showRemovePlaylistDialog(playlist); }
+        );
     }
 
     playlistElement.append(playlistButton);
@@ -464,11 +478,8 @@ function createMusicElement(title, author, withRemove = true) {
 
     let removeButton = null;
     if (withRemove) {
-        removeButton = createButton(
-            title + '-' + author,
-            '-remove-button',
-            trashBinSymbol,
-            function (){
+        removeButton = createRemoveButton(
+            function() {
                 activeTitle = title;
                 activeAuthor = author;
                 showRemoveMusicDialog();
@@ -803,21 +814,25 @@ function createMusicPlayer() {
     );
 
     let loopToggleSymbol = loop? loopSymbol: playThroughSymbol;
-    let loopToggle = createButton(
-        controls.id,
-        'loop-toggle',
-        loopToggleSymbol,
-        function() {
-            if (loop) {
-                loop = false;
-                loopToggle.value = playThroughSymbol;
-            }
-            else {
-                loop = true;
-                loopToggle.value = loopSymbol;
-            }
+    let loopToggle = document.createElement('div');
+    loopToggle.className = 'loop-toggle';
+
+    let loopImage = document.createElement('img');
+    loopImage.className = 'loop-img';
+    loopImage.src = loop? loopPath: playThroughPath;
+
+    loopToggle.onclick = function() {
+        if (loop) {
+            loop = false;
+            loopImage.src = playThroughPath;
         }
-    )
+        else {
+            loop = true;
+            loopImage.src = loopPath;
+        }
+    }
+
+    loopToggle.append(loopImage);
 
     controls.append(prevButton);
     controls.append(playButton);
@@ -841,16 +856,28 @@ async function renderMusicPlayer() {
 let activePlaylist = 'Library';
 let activeTitle;
 let activeAuthor;
-let activeDir = 'FirstSnow.mp3';
+let activeDir;
 let loop = false;
 let finishPlaylist = false;
 let prevSymbol = '\u25AE\u25C0';
 let playSymbol = '\u25B6';
 let pauseSymbol = '\u25AE\u25AE';
 let nextSymbol = '\u25B6\u25AE';
-let trashBinSymbol = '\u{1F5D1}';
 let loopSymbol = "\uD83D\uDD01";
 let playThroughSymbol = "\u21C4";
+
+//  images
+let trashPath = '/static/trash-light.png';
+let darkTrash = '/static/trash-dark.png';
+let lightTrash = '/static/trash-light.png';
+
+let loopPath = '/static/loop-light.png';
+let darkLoop = '/static/loop-dark.png';
+let lightLoop = '/static/loop-light.png';
+
+let playThroughPath = '/static/play-through-light.png';
+let playThroughDark = '/static/play-through-dark.png';
+let playThroughLight = '/static/play-through-light.png';
 
 //  Track Globals
 let playingPlaylist;
@@ -933,9 +960,24 @@ document.getElementById('toggle-theme').onclick = function() {
     if (toggle.value === '\u{25CF}') {
         toggle.value = '\u{25CB}';
         body.className = 'light';
+        trashPath = darkTrash;
+        loopPath = darkLoop;
+        playThroughPath = playThroughDark;
     }
     else {
         toggle.value = '\u{25CF}';
         body.className = 'dark';
+        trashPath = lightTrash;
+        loopPath = lightLoop;
+        playThroughPath = playThroughLight;
+    }
+    let removeImages = document.getElementsByClassName('remove-img');
+    for (let image of removeImages) {
+        image.src = trashPath;
+    }
+
+    let loopImages = document.getElementsByClassName('loop-img');
+    for (let image of loopImages) {
+        image.src = loop? loopPath: playThroughPath;
     }
 }

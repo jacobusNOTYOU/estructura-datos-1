@@ -1,0 +1,11 @@
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "libreria-musicas"
+version = "1.2"
+description = "Reproductor de musica web"
+dependencies = [
+    "flask",
+]

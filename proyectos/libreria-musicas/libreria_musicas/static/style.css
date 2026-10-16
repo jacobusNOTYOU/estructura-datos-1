@@ -15,6 +15,7 @@
     --foreground : var(--dark-white);
     --background-unselected : var(--gray);
     --foreground-unselected : var(--black);
+    --thumb: var(--dark-cyan);
 }
 
 .light {
@@ -31,6 +32,7 @@
     --unselected : var(var(--gray));
     --background-unselected : var(--black);
     --foreground-unselected : var(--dark-white);
+    --thumb: var(--dark-cyan);
 }
 /*
 #content {
@@ -67,34 +69,6 @@ dialog {
     color: var(--foreground);
     border: 1.5px solid var(--border);
 }
-
-progress {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    width: 200px;
-    height: 50%;
-    border-radius: 10em;
-    background: var(--foreground);
-}
-
-progress::-webkit-progress-bar {
-    border-radius: 10em;
-    background: var(--foreground);
-}
-
-progress::-webkit-progress-value {
-    border-radius: 10em;
-    background: var(--dark-cyan);
-}
-
-progress::-moz-progress-bar {
-    border-radius: 10em;
-    background: var(--cyan);
-}
-
-
 
 #body {
     display: grid;
@@ -194,6 +168,17 @@ progress::-moz-progress-bar {
     grid-column-gap: 5px;
 }
 
+.loop-toggle {
+    border: 1.5px solid var(--border);
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+.loop-img {
+    color: var(--foreground);
+    height: 1em;
+}
 
 .playlist-element {
     display: grid;
@@ -217,9 +202,16 @@ progress::-moz-progress-bar {
     grid-row: 1;
 }
 
-.-remove-button {
+.remove-button {
     grid-column: 2;
     grid-row: 1;
+    border: 1.5px solid var(--border);
+}
+
+.remove-img {
+    color: var(--foreground);
+    height: 1em;
+    margin-bottom: -0.15em;
 }
 
 .-play-button {
@@ -243,4 +235,52 @@ progress::-moz-progress-bar {
 #toggle-theme {
     grid-column: 2;
     font-size: medium;
+}
+
+
+/*
+ *  input[type=range] styles
+ */
+#music-player-progress-bar{
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    overflow: hidden;
+}
+
+::-webkit-slider-runnable-track{
+    background: var(--foreground);
+    height: 5px;
+    border: none;
+}
+
+::-webkit-slider-thumb{
+    appearance: none;
+    background-color: var(--thumb);
+    height: 0.5em;
+    width: 0.5em;
+    border: 100% solid var(--border);
+    border-radius: 50%;
+    box-shadow: -500em 0 0 500em var(--thumb);
+}
+
+::-moz-range-track{
+    background: var(--foreground);
+    height: 5px;
+    border: none;
+}
+
+::-moz-range-thumb{
+    appearance: none;
+    background-color: var(--thumb);
+    height: 5px;
+    width: 5px;
+    border: none;
+    border-radius: 0px;
+}
+
+::-moz-range-progress{
+    background: var(--thumb);
+    border: none;
+    height: 5px;
 }
