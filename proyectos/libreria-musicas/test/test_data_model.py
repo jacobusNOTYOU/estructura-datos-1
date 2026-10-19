@@ -1,4 +1,4 @@
-from models.logistic_engine import *
+from libreria_musicas.models.logistic_engine import *
 import json
 
 def data_model_test():

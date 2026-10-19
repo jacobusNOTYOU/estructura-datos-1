@@ -5,4 +5,6 @@ __pycache__/
 **/data
 **/dist
 libreria_musicas/data/**
-assets/
+libreria_musicas/assets/
+libreria_musicas/node_modules/
+package**

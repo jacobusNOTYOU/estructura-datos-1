@@ -1,1 +1,88 @@
-{ "relax": [ {"title": "Stal", "author": "C418", "direction":"m.mp3"}, {"title": "Wet Hands", "author": "C418", "direction":"/df/"}, {"title": "Burges in the back", "author": "WirdAI", "direction":""}, {"title": "Stal", "author": "C418", "direction":"m.mp3"} ], "work": [ {"title": "Stal", "author": "C418", "direction":"m.mp3"}, {"title": "Wet Hands", "author": "C418", "direction":"/df/"}, {"title": "Burges in the back", "author": "WirdAI", "direction":""} ], "study": [ {"title": "Stal", "author": "C418", "direction":"m.mp3"}, {"title": "Wet Hands", "author": "C418", "direction":"/df/"}, {"title": "Burges in the back", "author": "WirdAI", "direction":""} ], "Library": [ {"title": "Stal", "author": "C418", "direction":"m.mp3"}, {"title": "Wet Hands", "author": "C418", "direction":"/df/"}, {"title": "Burges in the back", "author": "WirdAI", "direction":""} ] }
+{
+"relax": [ 
+{
+"title": "Stal", 
+"author": "C418", 
+"direction":"m.mp3"
+
+}, 
+{
+"title": "Wet Hands", 
+"author": "C418", 
+"direction":"/df/"
+
+}, 
+{
+"title": "Burges in the back", 
+"author": "WirdAI", 
+"direction":""
+
+}, 
+{
+"title": "Stal", 
+"author": "C418", 
+"direction":"m.mp3"
+
+} 
+], 
+"work": [ 
+{
+"title": "Stal", 
+"author": "C418", 
+"direction":"m.mp3"
+
+}, 
+{
+"title": "Wet Hands", 
+"author": "C418", 
+"direction":"/df/"
+
+}, 
+{
+"title": "Burges in the back", 
+"author": "WirdAI", 
+"direction":""
+
+} 
+], 
+"study": [ 
+{
+"title": "Stal", 
+"author": "C418", 
+"direction":"m.mp3"
+
+}, 
+{
+"title": "Wet Hands", 
+"author": "C418", 
+"direction":"/df/"
+
+}, 
+{
+"title": "Burges in the back", 
+"author": "WirdAI", 
+"direction":""
+
+} 
+], 
+"Library": [ 
+{
+"title": "Stal", 
+"author": "C418", 
+"direction":"m.mp3"
+
+}, 
+{
+"title": "Wet Hands", 
+"author": "C418", 
+"direction":"/df/"
+
+}, 
+{
+"title": "Burges in the back", 
+"author": "WirdAI", 
+"direction":""
+
+} 
+]
+}

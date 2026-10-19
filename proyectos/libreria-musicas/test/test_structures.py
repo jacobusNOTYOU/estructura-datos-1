@@ -1,4 +1,4 @@
-from models.structures import *
+from libreria_musicas.models.structures import *
 
 # Music test
 def music_test() -> int:
