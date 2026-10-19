@@ -213,7 +213,7 @@ async function setPrevMusic(playlist) {
 //  Events
 function showAddPlaylistDialog() {
     let dialog = document.getElementById('add-playlist-dialog');
-    dialog.show();
+    dialog.style.display = "grid";
     let dialogText = document.getElementById('add-playlist-dialog-input');
     dialogText.focus();
 }
@@ -221,7 +221,7 @@ function showAddPlaylistDialog() {
 function showErrorDialog(Error) {
     let dialog = document.getElementById('error-dialog');
     document.getElementById('error-dialog-label').value = Error;
-    dialog.show();
+    dialog.style.display = "grid";
 }
 
 function showRemovePlaylistDialog(playlist) {
@@ -229,15 +229,15 @@ function showRemovePlaylistDialog(playlist) {
     dialog.playlistName = playlist;
 
     let label = document.getElementById('remove-playlist-dialog-label');
-    label.value = `Serguro que quiere borrar ${playlist}?`;
+    label.innerText = `Serguro que quiere borrar ${playlist}?`;
 
-    dialog.show();
+    dialog.style.display = "grid";
 }
 
 function showAddMusicDialog() {
     createAddMusicDialog();
     let dialog = document.getElementById('add-music-dialog');
-    dialog.show();
+    dialog.style.display = "grid";
     renderLibraryList();
 }
 
@@ -287,9 +287,11 @@ function showRemoveMusicDialog() {
 
     //  set label
     let label = document.getElementById(dialog.id + '-label');
-    label.value = `Seguro que quires eliminar ${activePlaylist + '-' + activeAuthor}?`
+    label.innerText = (`Seguro que quires eliminar `
+        + `${activeTitle + ' Por ' + activeAuthor}?`
+    );
 
-    dialog.show();
+    dialog.style.display = "grid";
 }
 
 async function setAudio() {
@@ -553,7 +555,7 @@ function createAddMusicDialog() {
         '-exit-button',
         'X',
         function () {
-            dialog.close();
+            dialog.style.display = "none";
         }
     );
 
@@ -561,7 +563,7 @@ function createAddMusicDialog() {
     let label = createLabel(
         dialog.id,
         '-label',
-        'Elige las canciones para tu nueva playlist!'
+        'Elige canciones para tu nueva playlist!'
     );
 
     //  save button
@@ -570,7 +572,7 @@ function createAddMusicDialog() {
         '-save-button',
         'Guardar',
         function () {
-            dialog.close();
+            dialog.style.display = "none";
             addSelectedMusic();
         }
     );
@@ -891,7 +893,7 @@ get().then((result) => renderLibrary(result));
 //  add-playlist-dialog
 document.getElementById('add-playlist-dialog-exit').onclick = function() {
     let dialog = document.getElementById('add-playlist-dialog');
-    dialog.close();
+    dialog.style.display = "none";
 }
 
 document.getElementById('add-playlist-dialog-save').onclick = async function() {
@@ -899,7 +901,7 @@ document.getElementById('add-playlist-dialog-save').onclick = async function() {
     let input = document.getElementById('add-playlist-dialog-input');
     let newPlaylist = input.value;
     input.value = '';
-    dialog.close();
+    dialog.style.display = "none";
     addPlaylist(newPlaylist);
     activePlaylist = newPlaylist;
     let playlist = await getPlaylist(newPlaylist);
@@ -908,7 +910,7 @@ document.getElementById('add-playlist-dialog-save').onclick = async function() {
 
 document.getElementById('add-playlist-dialog-cancel').onclick = function() {
     let dialog = document.getElementById('add-playlist-dialog');
-    dialog.close();
+    dialog.style.display = "none";
 }
 
 //  error-dialog
@@ -919,7 +921,7 @@ document.getElementById('error-dialog-exit-button').onclick = function() {
 
 document.getElementById('error-dialog-ok-button').onclick = function() {
     let dialog = document.getElementById('error-dialog');
-    dialog.close();
+    dialog.style.display = "none";
 }
 
 //  remove-playlist-dialog
@@ -928,12 +930,12 @@ document.getElementById('remove-playlist-dialog-remove-button').onclick = functi
 
     removePlaylist(dialog.playlistName);
 
-    dialog.close();
+    dialog.style.display = "none";
 }
 
 document.getElementById('remove-playlist-dialog-cancel-button').onclick = function () {
     let dialog = document.getElementById('remove-playlist-dialog');
-    dialog.close();
+    dialog.style.display = "none";
 }
 
 //  remove-music-dialog
@@ -945,12 +947,12 @@ document.getElementById('remove-music-dialog-remove-button').onclick = async fun
         document.getElementById(activeTitle + '-' + activeAuthor).remove();
     }
 
-    dialog.close();
+    dialog.style.display = "none";
 }
 
 document.getElementById('remove-music-dialog-cancel-button').onclick = function () {
     let dialog = document.getElementById('remove-music-dialog');
-    dialog.close();
+    dialog.style.display = "none";
 }
 
 //  toggle-theme

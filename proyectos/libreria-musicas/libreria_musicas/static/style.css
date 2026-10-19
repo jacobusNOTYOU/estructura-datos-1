@@ -87,6 +87,43 @@ dialog {
     justify-self: center;
 
     border: 1px solid var(--border);
+    grid-template-rows: 1em auto;
+    justify-content: stretch;
+}
+
+#remove-playlist-dialog,
+#remove-music-dialog {
+    grid-template-columns: auto auto auto;
+}
+
+#remove-playlist-dialog-label,
+#remove-music-dialog-label {
+    grid-column: 1 / span 3;
+    border: 1.5px solid var(--border);
+    font-size: medium;
+    margin-top: -5px;
+}
+
+#remove-playlist-dialog-cancel-button,
+#remove-music-dialog-cancel-button {
+    grid-column: 3;
+}
+
+#add-playlist-dialog{
+    grid-template-columns: auto auto auto auto;
+}
+
+#add-playlist-dialog-exit {
+    grid-column: 5;
+}
+
+#add-playlist-dialog-input{
+    grid-column: 1 / span 4;
+    grid-row: 1;
+}
+
+#add-playlist-dialog-cancel {
+    grid-column: 4 / span 2;
 }
 
 #content {

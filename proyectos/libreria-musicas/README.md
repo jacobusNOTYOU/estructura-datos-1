@@ -65,3 +65,39 @@ flask run
 ```
 python test.py
 ```
+
+# Configuracion
+
+La configuracion debe estar ubicado en `/direccion/a/libreria_musicas/.config
+/config.json`, donde 'libreria_musicas' es el archivo del mismo nombre en el 
+proyecto o un archivo en el mismo directorio del .whl.
+
+```
+{
+    "library_path":"/direccion/a/la/libreria.json",
+    "music_path":"/direccion/a/las/canciones/"
+}
+```
+
+# Libreria de musicas
+
+La libreria es un objeto json, cuyas propiedades son las playlists. La playlist
+'Library' es necesaria para el correcto funcionamiento del programa. Se describe 
+de la siguiente forma:
+
+```
+{
+    "Library": [
+        {
+            "title":"titulo de la cancion",
+            "author":"autor de la cancion",
+            "direction":"direccion a la cancion"
+        },
+        ...
+    ]
+    ...
+}
+```
+
+Donde "direccion a la cancion" inicia desde la direccion dada en "music_path" en 
+la configuracion (vease configuracion).

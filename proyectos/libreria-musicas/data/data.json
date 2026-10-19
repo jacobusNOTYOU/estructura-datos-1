@@ -13,9 +13,27 @@
 
 }, 
 {
-"title": "Wet Hands", 
+"title": "Subwoofer Lullaby", 
 "author": "C418", 
-"direction":"13 - Wet Hands.mp3"
+"direction":"03 - Subwoofer Lullaby.mp3"
+
+}, 
+{
+"title": "Living Mice", 
+"author": "C418", 
+"direction":"05 - Living Mice.mp3"
+
+}, 
+{
+"title": "Moog City", 
+"author": "C418", 
+"direction":"06 - Moog City.mp3"
+
+}, 
+{
+"title": "Haggstrom", 
+"author": "C418", 
+"direction":"07 - Haggstrom.mp3"
 
 }, 
 {
@@ -25,29 +43,41 @@
 
 }, 
 {
-"title": "Sweden", 
+"title": "Oxygène", 
 "author": "C418", 
-"direction":"18 - Sweden.mp3"
+"direction":"09 - Oxygène.mp3"
 
 }, 
 {
-"title": "Moog City", 
+"title": "Mice on Venus", 
 "author": "C418", 
-"direction":"06 - Moog City.mp3"
+"direction":"11 - Mice on Venus.mp3"
+
+}, 
+{
+"title": "Wet Hands", 
+"author": "C418", 
+"direction":"13 - Wet Hands.mp3"
+
+}, 
+{
+"title": "Sweden", 
+"author": "C418", 
+"direction":"18 - Sweden.mp3"
 
 } 
 ], 
 "C418": [ 
 {
-"title": "Minecraft", 
+"title": "Subwoofer Lullaby", 
 "author": "C418", 
-"direction":"08 - Minecraft.mp3"
+"direction":"03 - Subwoofer Lullaby.mp3"
 
 }, 
 {
-"title": "Sweden", 
+"title": "Living Mice", 
 "author": "C418", 
-"direction":"18 - Sweden.mp3"
+"direction":"05 - Living Mice.mp3"
 
 }, 
 {
@@ -57,9 +87,39 @@
 
 }, 
 {
+"title": "Haggstrom", 
+"author": "C418", 
+"direction":"07 - Haggstrom.mp3"
+
+}, 
+{
+"title": "Minecraft", 
+"author": "C418", 
+"direction":"08 - Minecraft.mp3"
+
+}, 
+{
+"title": "Oxygène", 
+"author": "C418", 
+"direction":"09 - Oxygène.mp3"
+
+}, 
+{
+"title": "Mice on Venus", 
+"author": "C418", 
+"direction":"11 - Mice on Venus.mp3"
+
+}, 
+{
 "title": "Wet Hands", 
 "author": "C418", 
 "direction":"13 - Wet Hands.mp3"
+
+}, 
+{
+"title": "Sweden", 
+"author": "C418", 
+"direction":"18 - Sweden.mp3"
 
 } 
 ]
