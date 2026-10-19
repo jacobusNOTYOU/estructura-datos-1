@@ -5,6 +5,7 @@ __pycache__/
 **/data
 **/dist
 libreria_musicas/data/**
-**/assets/
-**/node_modules/
+**/assets
+**/node_modules
 **package**
+**.config
