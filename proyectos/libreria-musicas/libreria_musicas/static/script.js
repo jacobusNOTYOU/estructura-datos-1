@@ -1,4 +1,3 @@
-//  Data Fetchers
 async function get() {
     let response = await fetch('/data');
     return response.json();
@@ -686,47 +685,6 @@ async function renderLibraryList() {
     }
 }
 
-/**
- * Music Player Plan:
- *  Phase 1: First Load
- *      - Render the music player.
- *      - Load the audio.
- *      - Set initial indicators values. X
- *      - Play the selected track.
- * 
- *  Phase 2: Controls
- *      - Exit Button:
- *          - Close the music player.
- *          - Stop the current track.
- * 
- *      - Bar:
- *          - Show the current progress.
- *          - Seek to in the current track.
- *          - Update the indicators values.
- * 
- *      - Prev Button:
- *          - Load the previous track.
- *          - Play the previous track.
- *          - Update indicators and labels.
- * 
- *      - Play Button:
- *          - Pause/Play the current track.
- * 
- *      - Next Button:
- *          - Load the next track.
- *          - Play the next track.
- *          - Update indicators and labels.
- * 
- * 
- *  Phase 3: Automatics
- *      - Update indicators when track is playing.
- *      - Play next track when the current track ends.
- * 
- * OPS:
- * 
- * 
- */
-
 function createMusicPlayer() {
     let temp = document.getElementById('music-player');
     if (temp !== null) {
@@ -887,6 +845,7 @@ let playingTitle;
 let playingAuthor;
 let playingDir;
 let updateTimer;
+//  Start
 get().then((result) => renderLibrary(result));
 
 //  Specific Events

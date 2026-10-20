@@ -34,14 +34,11 @@
     --foreground-unselected : var(--dark-white);
     --thumb: var(--dark-cyan);
 }
-/*
-#content {
-    display: flex;
-}
-*/
+
 :hover {
     border-color: var(--light-border);
 }
+
 .add-unselected-label,.add-unselected-button  {
     background-color: var(--background-unselected);
     color: var(--foreground-unselected);
