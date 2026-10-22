@@ -106,5 +106,6 @@ def main():
         print(f"Buscar {data_keys[i]}: {th.buscar(data_keys[i])}") 
     print()
 
+
 if __name__ == "__main__":
     main()
