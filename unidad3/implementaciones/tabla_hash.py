@@ -1,6 +1,7 @@
 """Implementacion de la tabla hash con rehashing y linear probing."""
 
 def hashy(s):
+    """Funcion hash para la tabla."""
     if isinstance(s, type('')):
         h: int = 0
         if len(s) < 1:
@@ -16,15 +17,111 @@ def hashy(s):
 
 
 class HashTable:
+    """Tabla Hash con Linear Probing y Rehashing.
+    Metodos:
+    - insert(key:str|number,value:any)
+    - remove(key:str|number)
+    - get(key:str|number)
+    - get_keys()
+    - __len__()
+    """
     def __init__(self, capacity: int = 16, load_factor: float = 0.75) -> None:
+        """Inicializa la tabla.
+        Parametros:
+        - capacity: la capacidad minima de la tabla.
+        - load_factor: que tan llena debe estar la tabla para hacer rehashing(en pro
+        porcion)
+        """
+
         self._slots: list[tuple(str|number, any)] = [None] * capacity
         self._lenght: int = 0
         self._load_factor: float = load_factor
         self._min_capacity: int = capacity
     
     def insert(self, key: str|number, value: any) -> None:
+        """Inserta un par (clave, valor) a la tabla. Si ya existe, se 
+        actualiza el valor del par.
+
+        Parametros:
+        - key: la clave del par.
+        - value: el valor del par.
+
+        Excepciones:
+        - OverflowError: cuando la table esta llena. Quiere decir que
+        el rehashing no esta funcionando correctamente.
+        """
+
         self._rehash()
         self._insert(key, value)
+
+    def remove(self, key: str|number) -> None:
+        """Eliminar el par cuya clave sea igual a `key`.
+        Parametros:
+        - key: la clave del par a eliminar.
+
+        Excepciones:
+        - KeyError: si no se encontro la clave(no existe el par).
+        """
+        self._rehash()
+        key_hash: int = self._index(key)
+        index: int = key_hash
+        
+        while True:
+            if self._slots[index] is not None and self._slots[index][0] == key:
+                self._slots[index] = None
+                self._lenght -= 1
+                return
+
+            index += 1
+            if index == len(self._slots):
+                index = 0
+
+            if index == key_hash:
+                break
+        
+        raise KeyError(f"Error: Key '{key}' doen't exist!")
+
+
+    def get(self, key: str|number) -> any:
+        """Retorn el valor del par cuya clave coincida con `key`.
+        Parametros:
+        - key: la clave del par.
+
+        Excepciones:
+        - KeyError: si no se encuentra la clave(no existe el par).
+        """
+        key_hash: int = self._index(key)
+        index: int = key_hash
+        
+        while True:
+            if self._slots[index] is not None and self._slots[index][0] == key:
+                return self._slots[index][1]
+
+            index += 1
+            if index == len(self._slots):
+                index = 0
+
+            if index == key_hash:
+                break
+        
+        raise KeyError(f"Error: Key '{key}' doen't exist!")
+
+    def get_keys(self) -> list[str|number]:
+        """Retorna una lista de todas las claves."""
+        keys: list[str|number] = []
+
+        for s in self._slots:
+            if s is not None:
+                keys.append(s[0])
+
+        return keys
+
+    def __len__(self) -> int:
+        """Retorna la cantidad de elementos la tabla."""
+        return self._lenght
+
+    def _index(self, key: str|number) -> int:
+        return hashy(key) % len(self._slots)
 
     def _insert(self, key: str|number, value: any) -> None:
         key_hash: int = self._index(key)
@@ -48,59 +145,6 @@ class HashTable:
                 break
         
         raise OverflowError("Error: HashTable is full!")
-
-    def remove(self, key: str|number) -> None:
-        self._rehash()
-        key_hash: int = self._index(key)
-        index: int = key_hash
-        
-        while True:
-            if self._slots[index] is not None and self._slots[index][0] == key:
-                self._slots[index] = None
-                self._lenght -= 1
-                return
-
-            index += 1
-            if index == len(self._slots):
-                index = 0
-
-            if index == key_hash:
-                break
-        
-        raise KeyError(f"Error: Key '{key}' doen't exist!")
-
-
-    def get(self, key: str|number) -> any:
-        key_hash: int = self._index(key)
-        index: int = key_hash
-        
-        while True:
-            if self._slots[index] is not None and self._slots[index][0] == key:
-                return self._slots[index][1]
-
-            index += 1
-            if index == len(self._slots):
-                index = 0
-
-            if index == key_hash:
-                break
-        
-        raise KeyError(f"Error: Key '{key}' doen't exist!")
-
-    def get_keys(self) -> list[str|number]:
-        keys: list[str|number] = []
-
-        for s in self._slots:
-            if s is not None:
-                keys.append(s[0])
-
-        return keys
-
-    def __len__(self) -> int:
-        return self._lenght
-
-    def _index(self, key: str|number) -> int:
-        return hashy(key) % len(self._slots)
 
     def _rehash(self) -> None:
         capacity: int = len(self._slots)
