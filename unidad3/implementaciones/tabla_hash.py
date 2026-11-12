@@ -129,7 +129,7 @@ class HashTable:
         
         while True:
             if self._slots[index] == None:
-                self._slots[index] = (key, value)
+                self._slots[index] = [key, value]
                 self._lenght += 1
                 return
 
