@@ -23,9 +23,9 @@ class Polinomio:
     Metodos:
     - agregar_termino(coef, exp)
     - evaluar(x)
-    - sunar(otro)
+    - sumar(otro)
     - restar(otro)
-    - derivar
+    - derivar()
     """
 
     def __init__(self) -> None:
