@@ -31,50 +31,50 @@ class ListaSimple:
         self._tamanio: int = 0
         self._index: HashTable = HashTable()
 
-    def insertar(self, dato: any) -> None:
-        """Inserta un dato al inicio de la Lista.
+    def insertar(self, nombre: str, email: str, telf: int) -> None:
+        """Inserta un nombre al inicio de la Lista.
         
         Parametros:
-        - dato: el dato a insertar.
+        - nombre: el nombre a insertar.
         """
 
-        if not self.buscar(dato):
-            nuevo: _Nodo = _Nodo(dato)
+        if not self.buscar(nombre):
+            nuevo: _Nodo = _Nodo([nombre, email, telf])
             nuevo._siguiente = self._cabeza
             self._cabeza = nuevo
             self._tamanio += 1
-            self._index.insert(dato, nuevo)
+            self._index.insert(nombre, nuevo)
 
-    def eliminar(self, dato) -> None:
+    def eliminar(self, nombre: str) -> None:
         """Elimina dato de la Lista si existe.
         
         Parametros:
-        - dato: dato a eliminar.
+        - nombre: nombre a eliminar.
         """
         if self._cabeza is not None:
             actual: _Nodo = self._cabeza
             anterior: _Nodo|None = None
-            while actual is not None and actual._dato != dato:
+            while actual is not None and actual._dato[0] != nombre:
                 anterior = actual
                 actual = actual._siguiente
             
             if actual is not None:
                 anterior._siguiente = actual._siguiente
-                self._index.remove(dato)
+                self._index.remove(nombre)
                 self._tamanio -= 1
 
-    def buscar(self, dato: any) -> bool:
-        """Busca el dato en la Lista y retorna True si lo encuentra, sino False
+    def buscar(self, nombre: str) -> bool:
+        """Busca el nombre en la Lista y retorna True si lo encuentra, sino False
         
         Parametros:
-        - dato: dato a buscar.
+        - nombre: nombre a buscar.
         """
 
         if self._cabeza is None:
             return False
         
         actual: _Nodo = self._cabeza
-        while actual is not None and actual._dato != dato:
+        while actual is not None and actual._dato[0] != nombre:
             actual = actual._siguiente
         
         if actual is not None:
@@ -82,50 +82,50 @@ class ListaSimple:
 
         return False
 
-    def insertar_idx(self, dato: any) -> None:
-        """Inserta (usando indice) un dato al inicio de la Lista.
+    def insertar_idx(self, nombre: str, email: str, telf: str) -> None:
+        """Inserta (usando indice) un nombre al inicio de la Lista.
         
         Parametros:
-        - dato: el dato a insertar.
+        - nombre: el nombre a insertar.
         """
 
-        if not self.buscar_idx(dato):
-            nuevo: _Nodo = _Nodo(dato)
+        if not self.buscar_idx(nombre):
+            nuevo: _Nodo = _Nodo([nombre, email, telf])
             nuevo._siguiente = self._cabeza
             self._cabeza = nuevo
             self._tamanio += 1
-            self._index.insert(dato, nuevo)
+            self._index.insert(nombre, nuevo)
 
-    def eliminar_idx(self, dato) -> None:
-        """Elimina (usando indice) dato de la Lista si existe.
+    def eliminar_idx(self, nombre: str) -> None:
+        """Elimina (usando indice) nombre de la Lista si existe.
         
         Parametros:
-        - dato: dato a eliminar.
+        - nombre: nombre a eliminar.
         """
 
-        if self.buscar_idx(dato):
+        if self.buscar_idx(nombre):
             if self._cabeza is not None:
                 actual: _Nodo = self._cabeza
                 anterior: _Nodo|None = None
-                while actual is not None and actual._dato != dato:
+                while actual is not None and actual._dato[0] != nombre:
                     anterior = actual
                     actual = actual._siguiente
                 
                 if actual is not None:
                     anterior._siguiente = actual._siguiente
-                    self._index.remove(dato)
+                    self._index.remove(nombre)
                     self._tamanio -= 1
 
-    def buscar_idx(self, dato: any) -> bool:
-        """Busca (usando indice) el dato en la Lista y retorna True si lo 
+    def buscar_idx(self, nombre: str) -> bool:
+        """Busca (usando indice) el nombre en la Lista y retorna True si lo 
         encuentra, sino False.
         
         Parametros:
-        - dato: dato a buscar.
+        - nombre: nombre a buscar.
         """
 
         try:
-            self._table.get(key)
+            self._table.get(nombre)
         except:
             return False
         else:
@@ -154,7 +154,7 @@ def main(num_datos = 1000):
     print(f'Insertando {num_datos} datos sin index:')
     start = time()
     for i in range(num_datos):
-        lista1.insertar(fake.name())
+        lista1.insertar(fake.name(), fake.email(), fake.phone_number())
     end = time()
     print(f"{end - start}s")
     print()
@@ -163,7 +163,7 @@ def main(num_datos = 1000):
     print(f'Insertando {num_datos} datos con index:')
     start = time()
     for i in range(num_datos):
-        lista.insertar_idx(fake.name())
+        lista.insertar_idx(fake.name(), fake.email(), fake.phone_number())
     end = time()
     print(f"{end - start}s")
     print()
@@ -214,7 +214,7 @@ def main(num_datos = 1000):
     print(f"duracion: {end - start} s")
     print()
 
-    lista.insertar_idx(dato)
+    lista.insertar_idx(dato[0], dato[1], dato[2])
     print(f"Eliminar '{dato}' con index:")
     start = time()
     lista.eliminar_idx(dato)
@@ -237,4 +237,4 @@ def main(num_datos = 1000):
     print()
 
 if __name__ == '__main__':
-    main(10000)
+    main(1000)
