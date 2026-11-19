@@ -237,4 +237,4 @@ def main(num_datos = 1000):
     print()
 
 if __name__ == '__main__':
-    main(1000)
+    main(10000)
