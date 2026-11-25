@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Re:musica</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body id="body" class="dark">
+        <audio id="track"></audio>
+        <div id="head">
+            <input id="head-label" type="text" value="Musik" readonly>
+            <input id="toggle-theme" type="button" value="&#x25CF">
+        </div>
+        <dialog id="add-playlist-dialog">
+            <input id="add-playlist-dialog-exit" type="button" value="X">
+            <input id="add-playlist-dialog-input" type="text">
+            <input id="add-playlist-dialog-save" type="button" value="Save">
+            <input id="add-playlist-dialog-cancel" type="button" value="Cancel">
+        </dialog>
+
+        <dialog id="remove-playlist-dialog" data-playlist-name>
+            <label id="remove-playlist-dialog-label"></label>
+            <input id="remove-playlist-dialog-remove-button" type="button" value="Remove">
+            <input id="remove-playlist-dialog-cancel-button" type="button" value="Cancel">
+        </dialog>
+
+        <dialog id="remove-music-dialog" data-music-name>
+            <label id="remove-music-dialog-label"></label>
+            <input id="remove-music-dialog-remove-button" type="button" value="Remove">
+            <input id="remove-music-dialog-cancel-button" type="button" value="Cancel">
+        </dialog>
+
+        <dialog id="error-dialog">
+            <input id="error-dialog-exit-button" type="button" value="X">
+            <input id="error-dialog-label" type="text" readonly>
+            <input id="error-dialog-ok-button" type="button" value="Ok">
+        </dialog>
+        <div id="content"></div>
+        <script src="{{url_for('static', filename='script.js')}}" type="module"></script>
+    </body>
+</html>
