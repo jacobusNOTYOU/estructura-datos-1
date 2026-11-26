@@ -327,6 +327,7 @@ class StaticPlaylist:
     - is_empty()
     - __len__()
     - is_in()
+    - _index(key: str)
     """
 
     def __init__(self, name: str, capacity: int) -> None:
@@ -350,8 +351,30 @@ class StaticPlaylist:
         - direction: la direccion del `Music`.
         """
 
-        self.musics[self._len] = Music(title, author, direction)
-        self._len += 1
+        index: int = self._index(title)
+        i = index
+
+        while True:
+            if self.musics[i] is None:
+                self.musics[i] = Music(title, author, direction)
+                self._len += 1
+                return
+            elif self.musics[i].title == title:
+                self.musics[i].author = author
+                self.musics[i].direction = direction
+                return
+            
+            if i < (len(self.musics) - 1):
+                i += 1
+            else:
+                i = 0
+            
+            if i == index:
+                break
+
+        raise OverflowError(
+            f"Error: La playlist esta llena!"
+        )
     
     def remove(self, title: str) -> None:
         """Elimina una `Music` de la playlist.
@@ -361,8 +384,7 @@ class StaticPlaylist:
 
         pos: int = self.is_in(title)
         if pos >= 0:
-            del self.musics[pos] 
-            self.musics.append(None)
+            self.musics[pos] = None
             self._len -= 1
 
     def get(self, title) -> Music:
@@ -387,7 +409,8 @@ class StaticPlaylist:
         
         titles: list[str] = []
         for m in self.musics:
-            titles.append(m.title)
+            if m is not None:
+                titles.append(m.title)
         
         return titles
     
@@ -398,7 +421,8 @@ class StaticPlaylist:
         
         authors: list[str] = []
         for m in self.musics:
-            authors.append(m.author)
+            if m is not None:
+                authors.append(m.author)
         
         return authors
     
@@ -412,7 +436,7 @@ class StaticPlaylist:
         """
 
         pos: int = self.is_in(title)
-        if pos >= -1:
+        if pos >= 0:
             return self.musics[pos].direction
         
         raise NameError(
@@ -449,20 +473,20 @@ class StaticPlaylist:
         `Music`.
         """
 
-        if loop:
-            if self._current >= self._len:
-                self._current = 0
-            else:
+        while True:
+            if self._current < (len(self) - 1):
                 self._current += 1
-        else:
-            if self._current >= self._len:
-                raise StopIteration(
-                    f"Se llego al final de la playlist!"
-                )
             else:
-                self._current += 1
-        
-        return self.musics[self._current]
+                if loop:
+                    self._current = 0
+                else:
+                    raise StopIteration(
+                        "Se llego al final de la playlist."
+                    )
+            
+            music: Music = self.musics[self._current]
+            if music is not None:
+                return music
 
     def prev(self, loop: bool = False) -> Music:
         """Retorna el `Music` anterior.
@@ -476,7 +500,7 @@ class StaticPlaylist:
 
         if loop:
             if self._current <= 0:
-                self._current = self._len
+                self._current = self._len - 1
             else:
                 self._current -= 1
         else:
@@ -494,16 +518,22 @@ class StaticPlaylist:
         self._current = 0
 
     def is_in(self, title: str) -> int:
-        if len(self) == 0:
-            return -1
-        
-        i = 0
-        while i < len(self):
-            if self.musics[i].title == title:
-                break
-            i += 1
+        index: int = self._index(title)
+        i = index
 
-        return i
+        while True:
+            if (self.musics[i] is not None 
+                and self.musics[i].title == title):
+                return i
+            
+            i += 1
+            if i == len(self.musics):
+                i = 0
+
+            if i == index:
+                break
+
+        return -1
 
     def is_empty(self) -> bool:
         """Verifica si la playlist esta vacia."""
@@ -512,6 +542,17 @@ class StaticPlaylist:
     def __len__(self) -> int:
         return self._len
 
+    def _index(self, key: str) -> int:
+        if len(key) < 1:
+            return 0
+
+        h = 0
+        h = ord(key[0]) + 2 * (h << 6) - h
+        for c in key:
+            h = h * 1979
+            h = h ^ ord(c)
+        return h % len(self.musics)
+    
 
 class Library:
     """Una lista de `Playlist`s, implementada como  una lista enlazada
@@ -520,6 +561,7 @@ class Library:
     - head: el inicio de la lista.
 
     Metodos:
+    - prepend_element(element: any)
     - append(name: str)
     - add_music(name:str,title:str,author:str,direction:str)
 
@@ -543,6 +585,18 @@ class Library:
     def __init__(self) -> None:
         self.head: Node|None = None
         self._len: int = 0
+
+    def prepend_element(self, element: any) -> None:
+        """Inserta cualquier elemento en el inicio de la lista."""
+        new_element: Node = Node(element)
+        if self.is_empty():
+            self.head = new_element
+            self._len += 1
+            return
+
+        new_element.next = self.head
+        self.head = new_element
+        self._len += 1
 
     def append(self, name: str) -> None:
         """crea una `Playlist` llamada `name` y la agrega al final de la 

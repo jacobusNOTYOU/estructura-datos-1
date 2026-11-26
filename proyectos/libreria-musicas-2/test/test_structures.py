@@ -238,6 +238,7 @@ def playlist_test() -> int:
 def static_playlist_test() -> int:
     failed_test_number = 0
     test_number = 0
+    print("Test: StaticPlaylist test.")
 
     print("Test: testing constructor.")
     test_number += 1
@@ -246,18 +247,34 @@ def static_playlist_test() -> int:
     except:
         print(f"Failed: constructor raised an exception.")
         failed_test_number += 1
+    
+    # is_empty
+    passed = True
+    print(f"Test: testing `is_empty`.")
+    test_number += 1
+    try:
+        if playlist.is_empty() == False:
+            print(f"Failed: playlist is empty, yet is_empty says it isn't!")
+            passed = False
+    except Exception as e:
+        print(f"Failed: an exception was raised by `is_empty`!\n{e}")
+        passed = False
+    
+    if not passed:
+        failed_test_number += 1
+
 
     # append
     test_titles = ["", "test", "test test"]
     test_authors = ["", "test", "test test"]
     test_dirs = ["", "test", "test test"]
-    print(f"Test: testing append.")
+    print(f"Test: testing `append`.")
     test_number += 1
     try:
         for i in range(len(test_titles)):
             playlist.append(test_titles[i], test_authors[i], test_dirs[i])
-    except:
-        print(f"Failed: `append` raised an exception!")
+    except Exception as e:
+        print(f"Failed: `append` raised an exception!", e)
         failed_test_number += 1
 
     # is_in
@@ -271,20 +288,21 @@ def static_playlist_test() -> int:
     except:
         print(f"Failed: an exception was raised by `is_in`!")
         failed_test_number += 1
+        raise
 
     # remove
     print("Test: testing `remove`.")
     test_number += 1
     try:
         playlist.remove(test_titles[0])
-        if playlist.is_in(test_titles[0]) < 0:
+        if playlist.is_in(test_titles[0]) != -1:
             print(f"Failed: `remove` didn't remove {test_titles[0]}")
             failed_test_number += 1
-    except:
-        print(f"Failed: an exception was raised by `remove`!")
+    except Exception as e:
+        print(f"Failed: an exception was raised by `remove`!", e)
         failed_test_number += 1
     
-    playlist.append(test_titles[i], test_authors[i], test_dirs[i])
+    playlist.append(test_titles[0], test_authors[0], test_dirs[0])
 
     # get
     print(f"Test: testing `get`.")
@@ -383,14 +401,108 @@ def static_playlist_test() -> int:
     if not passed:
         failed_test_number += 1
 
+    # next
+    passed = True
+    print(f"Test: testing `next`.")
+    test_number += 1
+    try:
+
+        test_next = playlist.next()
+        if test_next.title != test_titles[2]:
+            print(
+                f"Failed: the `next` '{test_next.title}' should be "
+                f"'{test_titles[2]}'!"
+            )
+            passed = False
+        
+        try:
+            test_next_2 = playlist.next()
+        except StopIteration:
+            print("Succes: raised the right Exception.")
+        else:
+            print(
+                f"Failed: `next` shouldn't loop!"
+            )
+            passed = False
+
+        test_next_3 = playlist.next(True)
+        if test_next_3.title == test_next.title:
+            print(
+                f"Failed: `next` should loop!"
+            )
+            passed = False
+    except Exception as e:
+        print(f"Failed: an exception was raised by `next`!{e}")
+        passed = False
+    
+    if not passed:
+        failed_test_number += 1
+
+    # prev
+    passed = True
+    print(f"Test: testing `prev`.")
+    test_number += 1
+    try:
+
+        test_prev = playlist.prev()
+        if test_prev.title != test_titles[1]:
+            print(
+                f"Failed: the `prev` '{test_prev.title}' should be "
+                f"'{test_titles[1]}'!"
+            )
+            passed = False
+        
+        try:
+            test_prev = playlist.prev()
+        except StopIteration:
+            print(f"Succes: The right exception was raised!")
+        else:
+            print(
+                f"Failed: `prev` shouldn't loop!"
+            )
+            passed = False
+
+        test_prev_3 = playlist.prev(True)
+        print(test_prev_3)
+        if test_prev_3.title == test_prev.title:
+            print(
+                f"Failed: `prev` should loop!"
+            )
+            passed = False
+    except StopIteration:
+        pass
+    except Exception as e:
+        print(f"Failed: an exception was raised by `prev`!\n{e}")
+        passed = False
+    
+    if not passed:
+        failed_test_number += 1
+
+    # restart
+    passed = True
+    print(f"Test: testing `restart`.")
+    test_number += 1
+    try:
+        playlist.restart()
+        if playlist._current != 0:
+            print("Failed: The playlist pointer should point at cero!")
+            passed = False
+
+    except Exception as e:
+        print(f"Failed: an exception was raised by `restart`!\n{e}")
+        passed = False
+    
+    if not passed:
+        failed_test_number += 1
+
     # get
     passed = True
     print(f"Test: testing `get`.")
     test_number += 1
     try:
         pass
-    except:
-        print(f"Failed: an exception was raised by `get`!")
+    except Exception as e:
+        print(f"Failed: an exception was raised by `get`!\n{e}")
         passed = False
     
     if not passed:

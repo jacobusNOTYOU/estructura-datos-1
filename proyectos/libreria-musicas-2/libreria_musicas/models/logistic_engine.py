@@ -334,6 +334,13 @@ class DataModel:
             raise json.JSONDecodeError(
                 f"Error: No se pudo deserializar {library}!"
             )
+
+        library_list = library_dict['Library']
+        del library_dict['Library']
+        static_library: StaticPlaylist = StaticPlaylist('Library', len(library_list))
+        for l in library_list:
+            static_library.append(l['title'], l['author'], l['direction'])
+        self._library.prepend_element(static_library)
         
         playlist_names: list[str] = list(library_dict)
         for n in playlist_names:
@@ -352,7 +359,8 @@ class DataModel:
                         playlists[i][j]["author"],
                         playlists[i][j]["direction"]
                     )
-        except Exception:
+        except Exception as e:
+            raise
             raise ValueError(
                 f"Error: Formato invalido de libreria econtrado en: {library}!"
             )

@@ -223,20 +223,64 @@ from flask import Blueprint, render_template, request, jsonify, Response
 import json
 from os import path
 
+try:
+    benchmark = config['benchmark']
+except:
+    benchmark = False
+
 bp: Blueprint = Blueprint('main', __name__)
 
 @bp.route('/')
 def index():
     return render_template('index.html')
 
-#   Acceso al modelo
-@bp.route('/data', methods=("GET", "POST"))
-def data():
-    if request.method == "POST":
-        request_data = request.json
-        return model_interface(request_data['instruction'], request_data['data'])
+if benchmark:
+    from time import perf_counter as time
 
-    return data_model.to_json()
+    filename: str = (
+            sys.path[0] + '/'
+            + __name__.split('.')[0]
+            + '/benchmark/time-benchmark.txt'
+        )
+    with open(filename, 'w') as f:
+        f.write('Data Structures Time Measurement (s)\n')
+
+    def bench_time(instruction, start_time):
+        cur = time()
+        with open(filename, 'a') as f:
+            f.write(f"{instruction}: {cur - start_time}\n")
+
+    #   Acceso al modelo
+    @bp.route('/data', methods=("GET", "POST"))
+    def data():
+        if request.method == "POST":
+            request_data = request.json
+            start = time()
+            response = model_interface(request_data['instruction'], request_data['data'])
+            bench_time(request_data['instruction'], start)
+            return response
+
+        return data_model.to_json()
+
+else:
+    #   Acceso al modelo
+    @bp.route('/data', methods=("GET", "POST"))
+    def data():
+        if request.method == "POST":
+            request_data = request.json
+            response = model_interface(request_data['instruction'], request_data['data'])
+            return response
+    
+        return data_model.to_json()
+
+    #   Acceso al modelo
+    @bp.route('/data', methods=("GET", "POST"))
+    def data():
+        if request.method == "POST":
+            request_data = request.json
+            return model_interface(request_data['instruction'], request_data['data'])
+
+        return data_model.to_json()
 
 @bp.route('/mp3/<music_direction>')
 def stream_mp3(music_direction):

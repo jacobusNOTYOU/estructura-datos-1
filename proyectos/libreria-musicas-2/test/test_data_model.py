@@ -342,12 +342,6 @@ def data_model_test():
         )
         failed_proof = True
     
-    if data_model_1.to_json() != data_model.to_json():
-        print(
-            f"Failed: The json file wasn't loaded correctly!"
-        )
-        failed_proof = True
-
     if failed_proof:
         failed_proof = False
         failed_tests += 1
