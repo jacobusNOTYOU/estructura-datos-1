@@ -243,7 +243,7 @@ def static_playlist_test() -> int:
     print("Test: testing constructor.")
     test_number += 1
     try:
-        playlist = StaticPlaylist('test', 3)
+        playlist = IndexedPlaylist('test', 3)
     except:
         print(f"Failed: constructor raised an exception.")
         failed_test_number += 1
@@ -296,6 +296,7 @@ def static_playlist_test() -> int:
     try:
         playlist.remove(test_titles[0])
         if playlist.is_in(test_titles[0]) != -1:
+            print(playlist.is_in(test_titles[0]))
             print(f"Failed: `remove` didn't remove {test_titles[0]}")
             failed_test_number += 1
     except Exception as e:
@@ -375,8 +376,8 @@ def static_playlist_test() -> int:
         if direction != playlist.get(test_titles[1]).direction:
             print(f"Failed: {direction} is not the direction of {test_titles[1]}")
             passed = False
-    except:
-        print(f"Failed: an exception was raised by `get_dir`!")
+    except Exception as e:
+        print(f"Failed: an exception was raised by `get_dir`!", e)
         passed = False
     
     if not passed:
@@ -406,7 +407,6 @@ def static_playlist_test() -> int:
     print(f"Test: testing `next`.")
     test_number += 1
     try:
-
         test_next = playlist.next()
         if test_next.title != test_titles[2]:
             print(
@@ -414,7 +414,7 @@ def static_playlist_test() -> int:
                 f"'{test_titles[2]}'!"
             )
             passed = False
-        
+        playlist.next()
         try:
             test_next_2 = playlist.next()
         except StopIteration:

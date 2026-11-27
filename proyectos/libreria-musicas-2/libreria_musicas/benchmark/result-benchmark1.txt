@@ -1,0 +1,5 @@
+Memory Benchmark
+Prom.: 1519.377kb, Max.: 11483.584kb, Min.: 641.724kb.
+Time Benchmark
+play:
+Prom.: 0.00006636s, Max.: 0.00038320s, Min.: 0.00002498s

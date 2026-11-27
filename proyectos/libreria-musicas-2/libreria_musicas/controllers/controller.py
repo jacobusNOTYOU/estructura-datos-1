@@ -255,9 +255,11 @@ if benchmark:
     def data():
         if request.method == "POST":
             request_data = request.json
+            instruction = request_data['instruction']
+            data = request_data['data']
             start = time()
-            response = model_interface(request_data['instruction'], request_data['data'])
-            bench_time(request_data['instruction'], start)
+            response = model_interface(instruction, data)
+            bench_time(instruction, start)
             return response
 
         return data_model.to_json()

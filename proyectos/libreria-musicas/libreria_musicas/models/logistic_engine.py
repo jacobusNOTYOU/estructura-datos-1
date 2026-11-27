@@ -352,7 +352,7 @@ class DataModel:
                         playlists[i][j]["author"],
                         playlists[i][j]["direction"]
                     )
-        except Exception:
+        except Exception as e:
             raise ValueError(
                 f"Error: Formato invalido de libreria econtrado en: {library}!"
             )

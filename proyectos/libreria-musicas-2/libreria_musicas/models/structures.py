@@ -301,10 +301,167 @@ class Playlist:
             yield actual.data
             actual = actual.next
 
+class HashTable:
+    """Tabla Hash con Linear Probing y Rehashing.
+    Metodos:
+    - insert(key:str|number,value:any)
+    - remove(key:str|number)
+    - get(key:str|number)
+    - get_keys()
+    - __len__()
+    """
+    def __init__(self, capacity: int = 16, load_factor: float = 0.75) -> None:
+        """Inicializa la tabla.
+        Parametros:
+        - capacity: la capacidad minima de la tabla.
+        - load_factor: que tan llena debe estar la tabla para hacer rehashing(en pro
+        porcion)
+        """
 
-class StaticPlaylist:
-    """Es un conjunto nombrado de `Music`, implementado en una lista
-    estatica.
+        self._slots: list[tuple(str|number, any)] = [None] * capacity
+        self._lenght: int = 0
+        self._load_factor: float = load_factor
+        self._min_capacity: int = capacity
+    
+    def insert(self, key: str|number, value: any) -> None:
+        """Inserta un par (clave, valor) a la tabla. Si ya existe, se 
+        actualiza el valor del par.
+
+        Parametros:
+        - key: la clave del par.
+        - value: el valor del par.
+
+        Excepciones:
+        - OverflowError: cuando la table esta llena. Quiere decir que
+        el rehashing no esta funcionando correctamente.
+        """
+
+        self._rehash()
+        self._insert(key, value)
+
+    def remove(self, key: str|number) -> None:
+        """Eliminar el par cuya clave sea igual a `key`.
+        Parametros:
+        - key: la clave del par a eliminar.
+
+        Excepciones:
+        - KeyError: si no se encontro la clave(no existe el par).
+        """
+        self._rehash()
+        key_hash: int = self._index(key)
+        index: int = key_hash
+        
+        while True:
+            if self._slots[index] is not None and self._slots[index][0] == key:
+                self._slots[index] = None
+                self._lenght -= 1
+                return
+
+            index += 1
+            if index == len(self._slots):
+                index = 0
+
+            if index == key_hash:
+                break
+        
+        raise KeyError(f"Error: Key '{key}' doen't exist!")
+
+
+    def get(self, key: str|number) -> any:
+        """Retorn el valor del par cuya clave coincida con `key`.
+        Parametros:
+        - key: la clave del par.
+
+        Excepciones:
+        - KeyError: si no se encuentra la clave(no existe el par).
+        """
+        key_hash: int = self._index(key)
+        index: int = key_hash
+        
+        while True:
+            if self._slots[index] is not None and self._slots[index][0] == key:
+                return self._slots[index][1]
+
+            index += 1
+            if index == len(self._slots):
+                index = 0
+
+            if index == key_hash:
+                break
+        
+        raise KeyError(f"Error: Key '{key}' doen't exist!")
+
+    def get_keys(self) -> list[str|number]:
+        """Retorna una lista de todas las claves."""
+        keys: list[str|number] = []
+
+        for s in self._slots:
+            if s is not None:
+                keys.append(s[0])
+
+        return keys
+
+    def __len__(self) -> int:
+        """Retorna la cantidad de elementos la tabla."""
+        return self._lenght
+
+    def _index(self, key: str) -> int:
+        if len(key) < 1:
+            return 0
+
+        h = 0
+        g = 735823692677
+        for k in key:
+            h += ord(k)*g
+        return (h*g) % len(self._slots)
+
+    def _insert(self, key: str|number, value: any) -> None:
+        key_hash: int = self._index(key)
+        index: int = key_hash
+        
+        while True:
+            if self._slots[index] == None:
+                self._slots[index] = [key, value]
+                self._lenght += 1
+                return
+
+            if self._slots[index][0] == key:
+                self._slots[index][1] = value
+                return
+
+            index += 1
+            if index == len(self._slots):
+                index = 0
+
+            if index == key_hash:
+                break
+        
+        raise OverflowError("Error: HashTable is full!")
+
+    def _rehash(self) -> None:
+        capacity: int = len(self._slots)
+        load_factor: float = self._lenght / capacity
+
+        if load_factor > self._load_factor:
+            capacity *= 2
+        elif (capacity > self._min_capacity and 
+                load_factor < (self._load_factor/4)):
+            capacity /= 2
+        else:
+            return
+        
+        old_list: list[tuple(str|number, any)] = self._slots
+        self._slots = [None] * int(capacity)
+        self._lenght = 0
+
+        for e in old_list:
+            if e is not None:
+                self._insert(e[0], e[1])
+
+
+class IndexedPlaylist:
+    """Es un conjunto nombrado de `Music`, implementado en una tabla
+    hash que usa de openadressing para resolver colisiones.
     Atributos:
     - name: el nombre de la playlist.
     - musics: la lista de musicas.
@@ -330,7 +487,7 @@ class StaticPlaylist:
     - _index(key: str)
     """
 
-    def __init__(self, name: str, capacity: int) -> None:
+    def __init__(self, name: str, capacity: int = 16) -> None:
         """Crea la lista estatica con el nombre `name` y una capacidad de 
         `capacity`.
         Parametros:
@@ -341,6 +498,7 @@ class StaticPlaylist:
         self.musics: list[Music] = [None] * capacity
         self._current: int = 0
         self._len: int = 0
+        self._index: HashTable = HashTable()
     
     def append(
         self, title: str, author: str = 'unkown', direction: str = '') -> None:
@@ -351,30 +509,15 @@ class StaticPlaylist:
         - direction: la direccion del `Music`.
         """
 
-        index: int = self._index(title)
-        i = index
-
-        while True:
-            if self.musics[i] is None:
-                self.musics[i] = Music(title, author, direction)
-                self._len += 1
-                return
-            elif self.musics[i].title == title:
-                self.musics[i].author = author
-                self.musics[i].direction = direction
-                return
-            
-            if i < (len(self.musics) - 1):
-                i += 1
-            else:
-                i = 0
-            
-            if i == index:
-                break
-
-        raise OverflowError(
-            f"Error: La playlist esta llena!"
-        )
+        if self._len < len(self.musics):
+            music: Music = Music(title, author, direction)
+            self.musics[self._len] = music
+            self._index.insert(title, self._len)
+            self._len += 1
+        else:
+            raise OverflowError(
+                f"Error: La playlist indexada esta llena!"
+            )
     
     def remove(self, title: str) -> None:
         """Elimina una `Music` de la playlist.
@@ -382,10 +525,16 @@ class StaticPlaylist:
         - title: el titulo del `Music`.
         """
 
-        pos: int = self.is_in(title)
-        if pos >= 0:
-            self.musics[pos] = None
+        try:
+            pos: int = self.is_in(title)
+        except:
+            pos = -1
+
+        if pos >= 0 and pos < self._len:
+            del self.musics[pos] 
+            self.musics.append(None)
             self._len -= 1
+            self._reindex()
 
     def get(self, title) -> Music:
         """Retorna el `Music` cuyo titulo sea `title`.
@@ -393,11 +542,10 @@ class StaticPlaylist:
         - title: el titulo del `Music` que se quiere.
         """
 
-        pos: int = self.is_in(title)
-        if pos >= 0:
-            return self.musics[pos]
-        
-        return None
+        try: 
+            return self.musics[self._index.get(title)]
+        except:
+            return None
     
     def get_titles(self) -> list[str]:
         """Retorna una lista de los titulos de los `Music` contenidos en la
@@ -408,9 +556,8 @@ class StaticPlaylist:
             return []
         
         titles: list[str] = []
-        for m in self.musics:
-            if m is not None:
-                titles.append(m.title)
+        for i in range(self._len):
+            titles.append(self.musics[i].title)
         
         return titles
     
@@ -420,9 +567,8 @@ class StaticPlaylist:
             return []
         
         authors: list[str] = []
-        for m in self.musics:
-            if m is not None:
-                authors.append(m.author)
+        for i in range(self._len):
+            authors.append(self.musics[i].author)
         
         return authors
     
@@ -435,13 +581,12 @@ class StaticPlaylist:
         - NameError: si no se encuetra un `Music` titulado `title`.
         """
 
-        pos: int = self.is_in(title)
-        if pos >= 0:
-            return self.musics[pos].direction
-        
-        raise NameError(
-            f"Error: No se encontro una cancion titulada {title}!"
-        )
+        try:
+            return self.musics[self._index.get(title)].direction
+        except:
+            raise NameError(
+                f"Error: No se encontro una cancion titulada {title}!"
+            )
 
     def play(self, title: str) -> Music:
         """Retorna el `Music` titulado `title` y actualiza el puntero de la 
@@ -474,7 +619,7 @@ class StaticPlaylist:
         """
 
         while True:
-            if self._current < (len(self) - 1):
+            if self._current < (len(self.musics) - 1):
                 self._current += 1
             else:
                 if loop:
@@ -498,42 +643,30 @@ class StaticPlaylist:
         `Music`.
         """
 
-        if loop:
-            if self._current <= 0:
-                self._current = self._len - 1
-            else:
+        while True:
+            if self._current > 0:
                 self._current -= 1
-        else:
-            if self._current <= 0:
-                raise StopIteration(
-                    f"Se llego al final de la playlist!"
-                )
             else:
-                self._current -= 1
-        
-        return self.musics[self._current]
+                if loop:
+                    self._current = len(self.musics) - 1
+                else:
+                    raise StopIteration(
+                        "Se llego al final de la playlist."
+                    )
+            
+            music: Music = self.musics[self._current]
+            if music is not None:
+                return music
 
     def restart(self) -> None:
         """Retorna el puntero de la playlist al inicio."""
         self._current = 0
 
     def is_in(self, title: str) -> int:
-        index: int = self._index(title)
-        i = index
-
-        while True:
-            if (self.musics[i] is not None 
-                and self.musics[i].title == title):
-                return i
-            
-            i += 1
-            if i == len(self.musics):
-                i = 0
-
-            if i == index:
-                break
-
-        return -1
+        try:
+            return self._index.get(title)
+        except:
+            return -1
 
     def is_empty(self) -> bool:
         """Verifica si la playlist esta vacia."""
@@ -541,17 +674,11 @@ class StaticPlaylist:
     
     def __len__(self) -> int:
         return self._len
-
-    def _index(self, key: str) -> int:
-        if len(key) < 1:
-            return 0
-
-        h = 0
-        h = ord(key[0]) + 2 * (h << 6) - h
-        for c in key:
-            h = h * 1979
-            h = h ^ ord(c)
-        return h % len(self.musics)
+    
+    def _reindex(self):
+        self._index = HashTable()
+        for i in range(self._len):
+            self._index.insert(self.musics[i].title, i)
     
 
 class Library:

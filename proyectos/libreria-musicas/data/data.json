@@ -1,27 +1,51 @@
 {
 "Library": [ 
 {
+"title": "Key", 
+"author": "C418", 
+"direction":"01 - Key.mp3"
+
+}, 
+{
+"title": "Chris", 
+"author": "C418", 
+"direction":"15 - Chris.mp3"
+
+}, 
+{
 "title": "Neon", 
 "author": "Scott Buckley", 
 "direction":"Neon.mp3"
 
 }, 
 {
-"title": "Wet Hands", 
+"title": "Thirteen", 
 "author": "C418", 
-"direction":"13 - Wet Hands.mp3"
+"direction":"16 - Thirteen.mp3"
 
 }, 
 {
-"title": "Living Mice", 
+"title": "Cat", 
 "author": "C418", 
-"direction":"05 - Living Mice.mp3"
+"direction":"19 - Cat.mp3"
 
 }, 
 {
-"title": "Moog City", 
+"title": "Danny", 
 "author": "C418", 
-"direction":"06 - Moog City.mp3"
+"direction":"21 - Danny.mp3"
+
+}, 
+{
+"title": "Clark", 
+"author": "C418", 
+"direction":"14 - Clark.mp3"
+
+}, 
+{
+"title": "Droopy Likes Your Face", 
+"author": "C418", 
+"direction":"24 - Droopy Likes Your Face.mp3"
 
 }, 
 {
@@ -40,6 +64,24 @@
 "title": "Oxygène", 
 "author": "C418", 
 "direction":"09 - Oxygène.mp3"
+
+}, 
+{
+"title": "Wet Hands", 
+"author": "C418", 
+"direction":"13 - Wet Hands.mp3"
+
+}, 
+{
+"title": "Door", 
+"author": "C418", 
+"direction":"02 - Door.mp3"
+
+}, 
+{
+"title": "Beginnng", 
+"author": "C418", 
+"direction":"22 - Beginning.mp3"
 
 }, 
 {
@@ -64,6 +106,42 @@
 "title": "Subwoofer Lullaby", 
 "author": "C418", 
 "direction":"03 - Subwoofer Lullaby.mp3"
+
+}, 
+{
+"title": "Death", 
+"author": "C418", 
+"direction":"04 - Death.mp3"
+
+}, 
+{
+"title": "Dog", 
+"author": "C418", 
+"direction":"20 - Dog.mp3"
+
+}, 
+{
+"title": "Droopy Likes Ricochet", 
+"author": "C418", 
+"direction":"23 - Droopy Likes Ricochet.mp3"
+
+}, 
+{
+"title": "Living Mice", 
+"author": "C418", 
+"direction":"05 - Living Mice.mp3"
+
+}, 
+{
+"title": "Excuse", 
+"author": "C418", 
+"direction":"17 - Excuse.mp3"
+
+}, 
+{
+"title": "Moog City", 
+"author": "C418", 
+"direction":"06 - Moog City.mp3"
 
 } 
 ], 

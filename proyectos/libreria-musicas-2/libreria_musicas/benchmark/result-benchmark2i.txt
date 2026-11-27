@@ -1,0 +1,21 @@
+Memory Benchmark
+Prom.: 1741.068kb, Max.: 11915.603kb, Min.: 772.008kb.
+Time Benchmark
+play:
+Prom.: 0.00002778s, Max.: 0.00006804s, Min.: 0.00001849s
+next:
+Prom.: 0.00001201s, Max.: 0.00002864s, Min.: 0.00000947s
+prev:
+Prom.: 0.00001028s, Max.: 0.00001251s, Min.: 0.00000891s
+add_playlist:
+Prom.: 0.00002286s, Max.: 0.00002286s, Min.: 0.00002286s
+get_playlist:
+Prom.: 0.00967417s, Max.: 0.01970983s, Min.: 0.00001570s
+get_music:
+Prom.: 0.00002290s, Max.: 0.00002431s, Min.: 0.00002075s
+add_music:
+Prom.: 0.00001366s, Max.: 0.00001544s, Min.: 0.00001178s
+remove_music:
+Prom.: 0.00001544s, Max.: 0.00001544s, Min.: 0.00001544s
+remove_playlist:
+Prom.: 0.00001217s, Max.: 0.00001217s, Min.: 0.00001217s

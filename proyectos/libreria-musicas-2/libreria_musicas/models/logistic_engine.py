@@ -337,7 +337,7 @@ class DataModel:
 
         library_list = library_dict['Library']
         del library_dict['Library']
-        static_library: StaticPlaylist = StaticPlaylist('Library', len(library_list))
+        static_library: StaticPlaylist = IndexedPlaylist('Library', len(library_list))
         for l in library_list:
             static_library.append(l['title'], l['author'], l['direction'])
         self._library.prepend_element(static_library)
